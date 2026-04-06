@@ -2,7 +2,50 @@
 
 # The aim of this script is read the file to extract all the information in a dict
 
+filename = 'people.db'
+
+
 def extract_info_file(filename): 
+    people = dict()
+    try: 
+        infile = open(filename, 'r')
+    except IOError as error: 
+        print('Can not open the file.Reason: ' + str(error))
+    else: 
+        for line in infile: 
+            line = line.strip() 
+            if line.upper().startswith('CPR:'):
+                key = line.split()[1]
+                if key not in people: 
+                    people[key] = {}
+
+            if line.lower().startswith('first name'): 
+                value = line.split()[2]
+                people[key]['first_name'] = value
+            if line.lower().startswith('last name'):
+                value = line.split()[2]
+                people[key]['last_name'] = value
+            if line.lower().startswith('height'):
+                value = line.split()[1]
+                people[key]['height'] = int(value)
+            if line.lower().startswith('weight'):
+                value = line.split()[1]
+                people[key]['weight'] = int(value)
+            if line.lower().startswith('eye color'):
+                value = line.split()[2]
+                people[key]['eye_color'] = value
+            if line.lower().startswith('blood type'):
+                value = line.split()[2]
+                people[key]['blood_type'] = value
+            if line.lower().startswith('children'):
+                value = line.split()[1:]
+                people[key]['children'] = value  
+            
+
+
+        print(people)
+
+extract_info_file(filename)
 
 
 
