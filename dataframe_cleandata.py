@@ -31,7 +31,9 @@ def extract_info_file(filename):
                         people[current_cpr]['gender'] = 'F'
                     else: 
                         people[current_cpr]['gender'] = 'M'
-
+                    age = int(current_cpr[4:6])
+                    people[current_cpr]['age'] = 100 - age 
+                    
 
                     # Normalize keys and types
                     if key_lower == 'first name': 
@@ -68,6 +70,9 @@ df.index.name = 'CPR'
 # question 1
 print(df["gender"].value_counts())
 df["gender"].value_counts()
+
+df.boxplot(column = 'age', by = 'gender', alpha = 0.5)
+plt.show()
 
 
 print(df)
