@@ -5,7 +5,6 @@ import pandas as pd
 
 
 filename = 'people.db'
-
 def extract_info_file(filename): 
     people = dict()
     current_cpr = None
@@ -27,10 +26,16 @@ def extract_info_file(filename):
                 if ': ' in line and current_cpr is not None: 
                     key, value = line.split(': ', 1)
                     key_lower = key.lower()
+                    if int(current_cpr[10]) % 2 == 0:
+                        people[current_cpr]['gender'] = 'F'
+                    else: 
+                        people[current_cpr]['gender'] = 'M'
+
 
                     # Normalize keys and types
                     if key_lower == 'first name': 
                         people[current_cpr]['first_name'] = value 
+            
                     elif key_lower == 'last name':
                         people[current_cpr]['last_name'] = value 
                     elif key_lower == 'height':
@@ -43,8 +48,8 @@ def extract_info_file(filename):
                         people[current_cpr]['blood_type'] = value 
                     elif key_lower == 'children':
                         people[current_cpr]['children'] = value.split()
-         
             print(people)
+
             return people
 
     except IOError as error: 
