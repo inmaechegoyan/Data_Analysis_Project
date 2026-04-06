@@ -4,48 +4,52 @@
 
 filename = 'people.db'
 
-
 def extract_info_file(filename): 
     people = dict()
+    current_cpr = None
+
     try: 
-        infile = open(filename, 'r')
+        with open(filename, 'r') as infile: 
+            for line in infile: 
+                line = line.strip()
+
+                if not line: 
+                    continue
+
+                # Detect CPR
+                if line.upper().startswith('CPR'): 
+                    current_cpr = line.split(':', 1)[1].strip()
+                    people[current_cpr] = {}
+                    continue
+                # Parse key-value lines
+                if ': ' in line and current_cpr is not None: 
+                    key, value = line.split(': ', 1)
+                    key_lower = key.lower()
+
+                    # Normalize keys and types
+                    if key_lower == 'first name': 
+                        people[current_cpr]['first_name'] = value 
+                    elif key_lower == 'last name':
+                        people[current_cpr]['last_name'] = value 
+                    elif key_lower == 'height':
+                        people[current_cpr]['height'] = int(value) 
+                    elif key_lower == 'weight':
+                        people[current_cpr]['weight'] = int(value) 
+                    elif key_lower == 'eye color':
+                        people[current_cpr]['eye color'] = value 
+                    elif key_lower == 'blood type':
+                        people[current_cpr]['blood_type'] = value 
+                    elif key_lower == 'children':
+                        people[current_cpr]['children'] = value.split()
+         
+            print(people)
     except IOError as error: 
-        print('Can not open the file.Reason: ' + str(error))
-    else: 
-        for line in infile: 
-            line = line.strip() 
-            if line.upper().startswith('CPR:'):
-                key = line.split()[1]
-                if key not in people: 
-                    people[key] = {}
+        print(f'Cannot open file.Reason: {error}')
+        return people
+        
 
-            if line.lower().startswith('first name'): 
-                value = line.split()[2]
-                people[key]['first_name'] = value
-            if line.lower().startswith('last name'):
-                value = line.split()[2]
-                people[key]['last_name'] = value
-            if line.lower().startswith('height'):
-                value = line.split()[1]
-                people[key]['height'] = int(value)
-            if line.lower().startswith('weight'):
-                value = line.split()[1]
-                people[key]['weight'] = int(value)
-            if line.lower().startswith('eye color'):
-                value = line.split()[2]
-                people[key]['eye_color'] = value
-            if line.lower().startswith('blood type'):
-                value = line.split()[2]
-                people[key]['blood_type'] = value
-            if line.lower().startswith('children'):
-                value = line.split()[1:]
-                people[key]['children'] = value  
-            
-
-
-        print(people)
-
-extract_info_file(filename)
-
-
-
+                    
+extract_info_file(filename)      
+                    
+                    
+                    
