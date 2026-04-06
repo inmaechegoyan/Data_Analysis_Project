@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+
+# The aim of this script is read the file to extract all the information in a dict
+
+def extract_info_file(filename): 
+
+
+
