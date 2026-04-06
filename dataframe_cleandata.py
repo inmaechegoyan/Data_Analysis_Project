@@ -49,7 +49,6 @@ def extract_info_file(filename):
                         people[current_cpr]['blood_type'] = value 
                     elif key_lower == 'children':
                         people[current_cpr]['children'] = value.split()
-                        
             print(people)
 
             return people
