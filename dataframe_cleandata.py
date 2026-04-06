@@ -55,6 +55,9 @@ def extract_info_file(filename):
 people_dict = extract_info_file(filename)    
 
 
-
 df = pd.DataFrame.from_dict(people_dict, orient='index')
+df.index.name = 'CPR'
+
 print(df)
+
+df.to_csv('people_clean.csv')
