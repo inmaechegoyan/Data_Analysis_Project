@@ -2,6 +2,7 @@
 
 
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 filename = 'people.db'
@@ -60,9 +61,17 @@ def extract_info_file(filename):
 people_dict = extract_info_file(filename)    
 
 
+
 df = pd.DataFrame.from_dict(people_dict, orient='index')
 df.index.name = 'CPR'
+
+# question 1
+print(df["gender"].value_counts())
+df["gender"].value_counts()
+
 
 print(df)
 
 df.to_csv('people_clean.csv')
+
+
