@@ -24,5 +24,10 @@ class People:
         
         oldest_child_age = max(100 - int(c[4:6]) for c in self.children)
         return self.age - oldest_child_age
-
+    
+    def first_child_cpr(self):
+        if not self.children:
+            return None
+        oldest_child = max(self.children, key=lambda c: 100 - int(c[4:6]))
+        return oldest_child
    

@@ -17,6 +17,10 @@ for person in read_people_info('people.db'):
             min_age = age_first_child
 avg_age = age_count / total_father
 
+####################
+### PRINT RESULT ###
+####################
+
 print(f"Maximum age of first-time fathers: {max_age:.2f}")
 print(f"Minimum age of first-time fathers:{min_age:.2f}")
 print(f"Average age of first-time fathers::{avg_age:.2f}")
@@ -35,6 +39,10 @@ for person in read_people_info('people.db'):
                 if low <= age <= high:
                     male_counts[i] += 1
                     break
+
+####################
+### PRINT RESULT ###
+####################
 print(f"{'Age range':<10} {'Male %':<10}")
 
 for i, (low, high) in enumerate(age_intervals):
@@ -57,6 +65,9 @@ for person in read_people_info('people.db'):
             min_age = age_first_child
 avg_age = age_count / total_mother
 
+####################
+### PRINT RESULT ###
+####################
 print(f"Maximum age of first-time mothers: {max_age:.2f}")
 print(f"Minimum age of first-time mothers:{min_age:.2f}")
 print(f"Average age of first-time mothers:{avg_age:.2f}")
@@ -77,6 +88,10 @@ for person in read_people_info('people.db'):
                 if low <= age <= high:
                     female_counts[i] += 1
                     break
+
+####################
+### PRINT RESULT ###
+####################
 print(f"{'Age range':<10} {'Female %':<10}")
 
 for i, (low, high) in enumerate(age_intervals):
@@ -102,19 +117,30 @@ for person in read_people_info('people.db'):
 percent_women = (woman_without_children / total_women) * 100
 percent_men = (men_without_children / total_men) * 100
 
+####################
+### PRINT RESULT ###
+####################
 print(f"Women without children: {percent_women:.2f}%")
 print(f"Men without children: {percent_men:.2f}%")
 
+# 10. Is the firstborn likely to be male or female?
+boys = 0
+girls = 0
+for person in read_people_info('people.db'):
+    first_child_cpr = person.first_child_cpr()
+    if(person.children):
+        if int(first_child_cpr[-1]) % 2 == 0:
+            girls += 1
+        else: boys +=1
+total_children = boys + girls
 
-
-
-
+####################
+### PRINT RESULT ###
+####################
+boys_percentage = (boys / total_children) *100
+girls_percentage =(girls / total_children) *100
+print(f"Firstborn likely to be female: {girls_percentage:.2f}%")
+print(f"Firstborn likely to be male: {boys_percentage:.2f}%")
         
-
-
-
-
-    
-  
-    
+        
 
