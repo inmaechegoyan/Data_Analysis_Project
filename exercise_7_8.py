@@ -34,17 +34,32 @@ if len(age_difference) > 0:
     avg_difference = sum(age_difference) / len(age_difference)
 else: 
     avg_difference = 0
-print(f'The age difference between the paretns with a common kid is {avg_difference:.2f} years')
+print(f'The age difference between the paretns with a common kid is {avg_difference:.2f} years')
 
 
+# Exercise 8: How many people has at least one grandparent that is still alive? A person is living if he/she is in the database. 
+# State the number both in percent and as a real number.
 
-# EXERCISE 9: How many has at least one cousin in the data set? What is the average number of cousins based on those who have cousins?
+people_with_grandparents = 0
+total_people = 0
 
-# Note: This number is historically difficult to compute right, but here are some thoughts to help you out in verifying your count.
-# You have to construct a method for finding cousin pairs. Any cousin pair you identify, can be written as a tuple (cpr1, cpr2) in a list.
-# a) There should be no duplicate tuples in the list - you are not cousins with the same person more than once.
-# b) There should be no tuple with the same cpr on position 1 and 2 - you are not cousins with yourself.
-# c) Because of symmetry, it is expected that for any (cpr1, cpr2) tuple there is a (cpr2, cpr1) tuple - when you are cousins with somebody, somebody is cousins with you. This has natural consequences: Set(cpr1) == Set(cpr2), Sorted_list(cpr1) == Sorted_list(cpr2).
-# d) This list does NOT discover sibling pairs inserted as cousins, however there should be no overlap of this list and a similar list covering sibling pairs.
-# e) The length of the list of cousin tuples is the number of cousin pairs, and the size of the set of cpr's is the number of people who have cousins.
+for person in read_people_info('people.db'):
+    total_people += 1
 
+    # Find the parents: 
+    parents = child_to_parents.get(person.cpr, [])
+
+    # Find the grandparetns 
+    has_grandparents = False
+
+    for parent in parents : 
+        grandparents = child_to_parents.get(parent.cpr, [])
+        if len(grandparents) > 0:  
+            has_grandparents = True
+            break
+    if has_grandparents: 
+        people_with_grandparents += 1
+
+percentage_grandparents = (people_with_grandparents/total_people) * 100
+
+print(f'The number of people that has at least one grandparent is {people_with_grandparents} which correspnd to the {percentage_grandparents:.2f}% of the people in the database')
