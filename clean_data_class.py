@@ -18,4 +18,11 @@ class People:
         self.gender = 'F' if int(cpr[-1]) % 2 == 0 else 'M'
         self.age = 100 - int(cpr[4:6])
 
+    def age_first_child(self):
+        if not self.children:
+            return None
+        
+        oldest_child_age = max(100 - int(c[4:6]) for c in self.children)
+        return self.age - oldest_child_age
+
    
