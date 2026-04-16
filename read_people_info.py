@@ -55,13 +55,13 @@ def read_people_info(filename):
 
 
 # Execute the program 
-for person in read_people_info('people.db'):
-    print(person.cpr)
-    print(person.first_name)
-    print(person.last_name)
-    print(person.height)
-    print(person.weight)
-    print(person.eye_color)
-    print(person.blood_type)
-    print(person.children)
-    print(person.age)
+# for person in read_people_info('people.db'):
+#     print(person.cpr)
+#     print(person.first_name)
+#     print(person.last_name)
+#     print(person.height)
+#     print(person.weight)
+#     print(person.eye_color)
+#     print(person.blood_type)
+#     print(person.children)
+#     print(person.age)
