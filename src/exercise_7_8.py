@@ -12,7 +12,7 @@ from src.read_people_info import read_people_info
 child_to_parents = dict()
 
 # Go thoroug all the people's children and add them as a key of a set, and add the parents as the values.
-for person in read_people_info('people.db'):
+for person in read_people_info('data/people.db'):
     for child in person.children: 
         if child not in child_to_parents: 
             child_to_parents[child] = []
@@ -43,7 +43,7 @@ print(f'The age difference between the paretns with a common kid is {avg_differe
 people_with_grandparents = 0
 total_people = 0
 
-for person in read_people_info('people.db'):
+for person in read_people_info('data/people.db'):
     total_people += 1
 
     # Find the parents: 

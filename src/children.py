@@ -1,12 +1,15 @@
-from Data_Analysis_Project.data.clean_data_class import People
-from Data_Analysis_Project.src.read_people_info import read_people_info
+
+from data.clean_data_class import People
+from src.read_people_info import read_people_info
+
+
 
 # 2. At what age does the men become fathers first time (max age, min age, average age)?
 max_age = 0
 min_age = 99
 age_count = 0 
 total_father = 0
-for person in read_people_info('people.db'):
+for person in read_people_info('data/people.db'):
     age_first_child = person.age_first_child()
     if person.gender == "M" and age_first_child is not None:
         age_count += age_first_child
@@ -29,7 +32,7 @@ print(f"Average age of first-time fathers::{avg_age:.2f}")
 age_intervals = [(15, 19), (20, 24), (25, 29), (30, 34), (35, 39), (40, 99)]
 male_counts = [0] * len(age_intervals)
 total_father = 0
-for person in read_people_info('people.db'):
+for person in read_people_info('data/people.db'):
     if person.gender == "M":
         age = person.age_first_child()
         if age is not None:
@@ -54,7 +57,7 @@ max_age = 0
 min_age = 99
 age_count = 0 
 total_mother = 0
-for person in read_people_info('people.db'):
+for person in read_people_info('data/people.db'):
     age_first_child = person.age_first_child()
     if person.gender == "F" and age_first_child is not None:
         age_count += age_first_child
@@ -78,7 +81,7 @@ print(f"Average age of first-time mothers:{avg_age:.2f}")
 age_intervals = [(15, 19), (20, 24), (25, 29), (30, 34), (35, 39), (40, 99)]
 female_counts = [0] * len(age_intervals)
 total_mother = 0
-for person in read_people_info('people.db'):
+for person in read_people_info('data/people.db'):
     if person.gender == "F":
         age = person.age_first_child()
         if age is not None:
@@ -103,7 +106,7 @@ woman_without_children = 0
 men_without_children = 0
 total_women = 0
 total_men = 0
-for person in read_people_info('people.db'):
+for person in read_people_info('data/people.db'):
     if person.gender == "F":
         total_women += 1
         if person.children == []:
@@ -126,7 +129,7 @@ print(f"Men without children: {percent_men:.2f}%")
 # 10. Is the firstborn likely to be male or female?
 boys = 0
 girls = 0
-for person in read_people_info('people.db'):
+for person in read_people_info('data/people.db'):
     first_child_cpr = person.first_child_cpr()
     if(person.children):
         if int(first_child_cpr[-1]) % 2 == 0:

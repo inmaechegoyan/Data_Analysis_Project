@@ -19,7 +19,7 @@ total_female = 0
 total_male = 0 
 
 # Call the function to extract the age and the gender 
-for person in read_people_info('people.db'):
+for person in read_people_info('data/people.db'):
     person_age = person.age
     person_gender = person.gender
 
