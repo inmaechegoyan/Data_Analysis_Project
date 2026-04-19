@@ -63,3 +63,60 @@ for person in read_people_info('data/people.db'):
 percentage_grandparents = (people_with_grandparents/total_people) * 100
 
 print(f'The number of people that has at least one grandparent is {people_with_grandparents} which correspnd to the {percentage_grandparents:.2f}% of the people in the database')
+
+
+
+
+# Exercise 9: How many has at least one cousin in the data set? What is the average number of cousins based on those who have cousins?
+# Note: This number is historically difficult to compute right, but here are some thoughts to help you out in verifying your count.
+# You have to construct a method for finding cousin pairs. Any cousin pair you identify, can be written as a tuple (cpr1, cpr2) in a list.
+# a) There should be no duplicate tuples in the list - you are not cousins with the same person more than once.
+# b) There should be no tuple with the same cpr on position 1 and 2 - you are not cousins with yourself.
+# c) Because of symmetry, it is expected that for any (cpr1, cpr2) tuple there is a (cpr2, cpr1) tuple - when you are cousins with somebody, 
+# somebody is cousins with you. This has natural consequences: Set(cpr1) == Set(cpr2), Sorted_list(cpr1) == Sorted_list(cpr2).
+# d) This list does NOT discover sibling pairs inserted as cousins, however there should be no overlap of this list and a similar list covering sibling pairs.
+# e) The length of the list of cousin tuples is the num
+
+
+###########################
+#### Find cousins pairs ##
+##########################
+
+parent_to_children = dict()
+cousins_pair = []
+
+for person in read_people_info('data/people.db'):
+
+    # Reuse the child_to_parents dict that i did for previous exercises (child : [parent1, parent2..])
+    # Create another dict parent_to_children ( parent : [child1, child2... ])
+    parent_to_children[person.cpr] = person.children
+
+    # For each person get the parents: 
+    parents = child_to_parents.get(person.cpr, [])
+
+    # For each parent in the list, get their parents (grandparents)
+    for parent in parents: 
+        grandparents = child_to_parents.get(parent.cpr, [])
+
+        # For each grandparent, obtain their kids (aunt/uncles + parents)
+        for grandparent in grandparents: 
+            siblings = parent_to_children.get(grandparent.cpr, [])
+
+            for sibling in siblings: 
+                # We dont want to take the parents of the current person just the uncles/auntis 
+                if sibling == parent.cpr: 
+                    continue
+
+                # Kids form uncleas and aunts: 
+                cousins = parent_to_children.get(sibling,[])
+
+                for cousin in cousins: 
+                    # Cannot count the current person: 
+                    if cousin != person.cpr: 
+                        cousins_pair.append((person.cpr, cousin))
+
+# As we will have duplicates, we can do a set to erease them 
+cousins_pair = list(set(cousins_pair))
+
+length = len(cousins_pair)
+print(f'The number of people that have cousins is {length} people')
