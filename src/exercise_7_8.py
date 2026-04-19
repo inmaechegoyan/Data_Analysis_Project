@@ -7,6 +7,10 @@ from src.read_people_info import read_people_info
 
 
 
+#####################
+#### EXERCISE 7 ####
+####################
+
 # EXERCISE 7: What is the average age difference between the parents (with a child in common obviously)?
 
 child_to_parents = dict()
@@ -37,6 +41,11 @@ else:
 print(f'The age difference between the paretns with a common kid is {avg_difference:.2f} years')
 
 
+
+#####################
+#### EXERCISE 8 ####
+####################
+
 # Exercise 8: How many people has at least one grandparent that is still alive? A person is living if he/she is in the database. 
 # State the number both in percent and as a real number.
 
@@ -66,6 +75,9 @@ print(f'The number of people that has at least one grandparent is {people_with_g
 
 
 
+#####################
+#### EXERCISE 9 ####
+####################
 
 # Exercise 9: How many has at least one cousin in the data set? What is the average number of cousins based on those who have cousins?
 # Note: This number is historically difficult to compute right, but here are some thoughts to help you out in verifying your count.
@@ -120,3 +132,14 @@ cousins_pair = list(set(cousins_pair))
 
 length = len(cousins_pair)
 print(f'The number of people that have cousins is {length} people')
+
+# Cousins average 
+
+cousin_per_person = {}
+for a,b in cousins_pair: 
+    if a not in cousin_per_person: 
+        cousin_per_person[a] = set()
+    cousin_per_person[a].add(b)
+
+avg = sum(len(v) for v in cousin_per_person.values()) / len(cousin_per_person)
+print(f'The average number of cousins per person is {avg:.2f}')
