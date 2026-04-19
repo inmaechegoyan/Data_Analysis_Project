@@ -143,3 +143,6 @@ for a,b in cousins_pair:
 
 avg = sum(len(v) for v in cousin_per_person.values()) / len(cousin_per_person)
 print(f'The average number of cousins per person is {avg:.2f}')
+
+
+
