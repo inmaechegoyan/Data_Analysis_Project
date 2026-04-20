@@ -30,4 +30,11 @@ class People:
             return None
         oldest_child = max(self.children, key=lambda c: 100 - int(c[4:6]))
         return oldest_child
+    
+    def bmi(self):
+        if not self.height or not self.weight:
+            return None
+        if self.height and self.weight:
+            bmi = self.weight / (self.height/100)**2
+            return bmi
    
