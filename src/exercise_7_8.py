@@ -146,3 +146,66 @@ print(f'The average number of cousins per person is {avg:.2f}')
 
 
 
+
+#####################
+#### EXERCISE 11 ###
+####################
+
+# How many men/women (percentage) have children with more than one woman/man?
+
+
+person_to_partner = {}
+
+# create a¡
+for parents in child_to_parents.values(): 
+    if len(parents) < 2: 
+        continue    # There is no co-parenting 
+    
+    for i in range(len(parents)):
+        for j in range(len(parents)):
+
+            if i == j: 
+                continue    # someone can not have kids with themselfs
+            
+            parent1 = parents[i]
+            parent2 = parents[j]
+
+            if parent1.cpr not in person_to_partner: 
+                person_to_partner[parent1.cpr] = set()  # Create a set so partners are not duplicated
+
+            person_to_partner[parent1.cpr].add(parent2.cpr)     # if the person is already in the dict, add the partner
+
+# Varibales: 
+
+male_total = 0
+female_total = 0
+
+male_pluspartner = 0
+female_pluspartner = 0
+
+for person in read_people_info('data/people.db'):
+    partner = person_to_partner.get(person.cpr, set())
+
+    if person.gender == 'M':
+        male_total += 1
+        if len(partner) > 1:
+            male_pluspartner += 1
+    elif person.gender == 'F': 
+        female_total += 1
+        if len(partner) > 1: 
+            female_pluspartner += 1
+
+# Calculate percentages: 
+
+men_more_partner = (male_pluspartner/male_total)*100 if male_total > 0 else 0 
+women_more_partner = (female_pluspartner/female_total)*100 if female_total > 0 else 0 
+
+## Display RESULT ##
+
+print(f'{'':25}{'Men':5}{'Women':5}')
+print(f'{'Multiple partners (%)':25}{men_more_partner:5}{women_more_partner:5}')
+print(f'{'Total':25}{male_total:5}{female_total:5}') 
+
+
+
+
