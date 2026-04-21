@@ -270,3 +270,10 @@ for couple, count in count_couple_type.items():
 
 
 
+
+
+#####################
+#### EXERCISE 13 ###
+####################
+
+# Do tall parents get tall children?
