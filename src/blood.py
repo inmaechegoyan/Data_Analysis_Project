@@ -48,9 +48,24 @@ def possible_child_rh(parent1, parent2):
         return {"-"}
     return set()
 
+def can_donate_blood(blood_type):
+    if blood_type == "A" :
+        return {"A", "AB"}
+    elif (blood_type == "B"):
+        return {"B", "AB"}
+    elif (blood_type == "AB"):
+        return {"AB"}
+    elif (blood_type == "O"):
+        return {"A","B","O","AB"}
+    return set()
+
+
 adopted_children = []
 adopted_count = 0
 not_adopted_count = 0
+parent_cant_donate = []
+cant_donate_count = 0
+can_donate_count = 0
 
 for child, parents in child_to_parents.items():
 
@@ -73,7 +88,11 @@ for child, parents in child_to_parents.items():
     # Calculate child possible blood types
     possible_blood = possible_child_blood(blood_type_1, blood_type_2)
     possible_rh = possible_child_rh(rh1, rh2)
-    
+
+    # Calculate who can the parents donate
+    donate_parent1 = can_donate_blood(blood_type_1)
+    donate_parent2 = can_donate_blood(blood_type_2)
+
 
     # Search child's blood type
     for person in read_people_info('data/people.db'):
@@ -86,8 +105,25 @@ for child, parents in child_to_parents.items():
                 adopted_count += 1
             else: 
                 not_adopted_count += 1
+            
+            if(child_blood not in donate_parent1):
+                parent_cant_donate.append(parents[0])
+                cant_donate_count += 1
+            else: can_donate_count += 1
+            if(child_blood not in donate_parent2):
+                parent_cant_donate.append(parents[1])
+                cant_donate_count += 1
+            else: can_donate_count +=1
 
-print(adopted_count)
-print(not_adopted_count)
-print(adopted_children)
+
+
+
+print(cant_donate_count)
+print(can_donate_count)
+
+
+
+# Make a list of fathers who can donate blood to their sons. The list must identify
+# the father and the son(s) and their blood type. You must write the length of the 
+# list in the report, together with the number of fathers and the number of sons.
 
