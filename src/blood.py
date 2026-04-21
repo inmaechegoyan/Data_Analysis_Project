@@ -39,6 +39,15 @@ def possible_child_blood(parent1, parent2):
         return {"A", "B"}
     return set()
 
+def possible_child_rh(parent1, parent2):
+    if parent1 == "+" and parent2 == "+":
+        return {"+"}
+    elif (parent1 == "+" and parent2 == "-") or (parent1 == "-" and parent2 == "+"):
+        return {"+", "-"}
+    elif (parent1 == "-" and parent2 == "-"):
+        return {"-"}
+    return set()
+
 adopted_children = []
 adopted_count = 0
 not_adopted_count = 0
@@ -47,26 +56,30 @@ for child, parents in child_to_parents.items():
 
     blood_type_1 = ""
     blood_type_2 = ""
+    rh1 = ""
+    rh2 = ""
     # Look for parents blood type
     for person in read_people_info('data/people.db'):
         if person.cpr == parents[0]:
             blood_type_1 = person.blood_type[:-1]
-            print(blood_type_1)
+            rh1 = person.blood_type[-1]
         elif person.cpr == parents[1]:
             blood_type_2 = person.blood_type[:-1]
-            print(blood_type_2)
+            rh2 = person.blood_type[-1]
 
     # Calculate child possible blood types
-    possible_types = possible_child_blood(blood_type_1, blood_type_2)
+    possible_blood = possible_child_blood(blood_type_1, blood_type_2)
+    possible_rh = possible_child_rh(rh1, rh2)
     
 
     # Search child's blood type
     for person in read_people_info('data/people.db'):
         if person.cpr == child:
             child_blood = person.blood_type[:-1]
+            child_rh = person.blood_type[-1]
             print(child_blood)
 
-            if child_blood not in possible_types:
+            if (child_blood not in possible_blood) or (child_rh not in possible_rh):
                 adopted_children.append(child)
                 adopted_count += 1
             else: not_adopted_count += 1
