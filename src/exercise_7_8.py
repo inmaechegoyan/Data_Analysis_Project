@@ -209,3 +209,64 @@ print(f'{'Total':25}{male_total:5}{female_total:5}')
 
 
 
+#####################
+#### EXERCISE 12 ###
+####################
+
+# Do tall people marry (or at least get children together)? To answer that, calculate the percentages of tall/tall, tall/normal, 
+# tall/short, normal/normal, normal/short, and short/short couples. Decide your own limits for tall, normal and short, and if 
+# they are the same for men and women.
+
+# Classify the people according to their gender and height and return the classification accordin to it
+def heigth_category(person): 
+    if person.gender == 'M':
+        if person.height > 187:
+            return 'tall'
+        elif person.height >= 173:
+            return 'normal'
+        else: 
+            return 'short'
+    elif person.gender == 'F':
+        if person.height > 175:
+            return 'tall'
+        elif person.height >= 160:
+            return 'normal'
+        else: 
+            return 'short'
+
+
+# Identify the type of couples
+
+count_couple_type = dict()
+
+for parents in child_to_parents.values():
+    if len(parents) < 2: 
+        continue
+
+
+    for i in range(len(parents)): 
+        for j in range(i+1, len(parents)):
+            parent1 = parents[i]
+            parent2 = parents[j]
+
+            height1 = heigth_category(parent1)
+            height2 = heigth_category(parent2)
+
+            couple = tuple(sorted([height1, height2]))
+
+            if couple not in count_couple_type: 
+                count_couple_type[couple] = 0
+            count_couple_type[couple] += 1   # sum 1 according to the type of couple
+    
+total_couples = sum(count_couple_type.values())
+
+# Display result:
+
+
+print(f'{'Couple Type':20} {'Porcentage':8}')
+for couple, count in count_couple_type.items(): 
+    percentage_couple_types = (count/total_couples)*100
+    print(f'{str(couple):20}: {percentage_couple_types:8.2f}%')
+
+
+
