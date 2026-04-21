@@ -277,3 +277,28 @@ for couple, count in count_couple_type.items():
 ####################
 
 # Do tall parents get tall children?
+
+tall, normal, short = [0,0,0]
+
+for person in read_people_info('data/people.db'):
+    for child in person.children: 
+        if child not in child_to_parents: 
+            child_to_parents[child] = []
+        child_to_parents[child].append(person)
+
+    
+for kid, parents in child_to_parents.items():
+    if len(parents) < 2: 
+        continue
+    category_kid = heigth_category(kid)
+    for  parent in parents: 
+        category_parent = heigth_category(parent)
+
+    if category_kid == 'tall' and category_parent == 'tall':
+        tall += 1
+    elif category_kid == 'normal': and category_parent 
+        normal += 1
+    else: 
+        short += 1
+
+
