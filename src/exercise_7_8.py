@@ -278,27 +278,79 @@ for couple, count in count_couple_type.items():
 
 # Do tall parents get tall children?
 
-tall, normal, short = [0,0,0]
+# tall, normal, short = [0,0,0]
 
-for person in read_people_info('data/people.db'):
+# for person in read_people_info('data/people.db'):
+#     for child.cpr in person.children: 
+#         if child.cpr not in child_to_parents: 
+#             child_to_parents[child] = []
+#         child_to_parents[child.cpr].append(person)
+
+    
+# for kid, parents in child_to_parents.items():
+#     if len(parents) < 2: 
+#         continue
+#     category_kid = heigth_category(kid)
+#     for  parent in parents: 
+#         category_parent = heigth_category(parent)
+
+#     if category_kid == 'tall' and category_parent == 'tall':
+#         tall += 1
+#     # elif category_kid == 'normal' and category_parent 
+#     #     normal += 1
+#     # else: 
+#     #     short += 1
+# print(tall)
+
+
+height_by_cpr = dict()
+child_to_parents = dict()
+
+for person in read_people_info('data/people.db'): 
+
+    # Save the height of each person 
+    height_by_cpr[person.cpr] = heigth_category(person)
+
     for child in person.children: 
         if child not in child_to_parents: 
             child_to_parents[child] = []
-        child_to_parents[child].append(person)
+        child_to_parents[child].append(person.cpr)
 
-    
-for kid, parents in child_to_parents.items():
+    tall_and_tall = 0
+    parent_tall_total = 0
+
+for child, parents in child_to_parents.items():
     if len(parents) < 2: 
         continue
-    category_kid = heigth_category(kid)
-    for  parent in parents: 
-        category_parent = heigth_category(parent)
+    
+    # Obtain parents height 
+    parent_categories = []
 
-    if category_kid == 'tall' and category_parent == 'tall':
-        tall += 1
-    elif category_kid == 'normal': and category_parent 
-        normal += 1
-    else: 
-        short += 1
+    for parent in parents: 
+        parent_categories.append(height_by_cpr[parent])
+    
+    # Check if all the parents of a child are tall 
 
+    all_parents_tall = True
+
+    for p in parent_categories: 
+        if p != 'tall': 
+            all_parents_tall = False
+            break 
+
+    # check if both parents are tall
+    if all_parents_tall: 
+        parent_tall_total += 1
+
+        # check if the kid is also tall 
+        if height_by_cpr[child] == 'tall': 
+            tall_and_tall += 1
+
+#### DISPLAY RESULT ####
+
+if parent_tall_total > 0 : 
+    probability = tall_and_tall / parent_tall_total
+    print(f'P(tall child | tall parents) = {probability:.2f}')
+else: 
+    print('There is no enought data')
 
