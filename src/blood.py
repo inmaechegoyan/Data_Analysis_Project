@@ -1,8 +1,13 @@
-# Using the knowledge of blood group type inheritance, are there any children
+# 15. Using the knowledge of blood group type inheritance, are there any children
 # in the database where you can safely say that at least one of the parents 
 # are not the real parent. If such children exists, make a list of them. In the 
 # report you must discuss how you determine that the parent(s) of the child are not 
 # the "true" parents
+
+
+# 16. Make a list of fathers who can donate blood to their sons. The list must identify
+# the father and the son(s) and their blood type. You must write the length of the 
+# list in the report, together with the number of fathers and the number of sons.
 
 from data.clean_data_class import People
 from src.read_people_info import read_people_info
@@ -77,7 +82,6 @@ for child, parents in child_to_parents.items():
         continue
     # Look for parents blood type
     for person in read_people_info('data/people.db'):
-        
         if person.cpr == parents[0]:
             blood_type_1 = person.blood_type[:-1]
             rh1 = person.blood_type[-1]
@@ -112,7 +116,7 @@ for child, parents in child_to_parents.items():
             else: can_donate_count += 1
             if(child_blood not in donate_parent2):
                 parent_cant_donate.append(parents[1])
-                cant_donate_count += 1
+                cant_donate_count += 1 
             else: can_donate_count +=1
 
 
@@ -120,10 +124,77 @@ for child, parents in child_to_parents.items():
 
 print(cant_donate_count)
 print(can_donate_count)
+print(parent_cant_donate)
 
 
 
-# Make a list of fathers who can donate blood to their sons. The list must identify
-# the father and the son(s) and their blood type. You must write the length of the 
-# list in the report, together with the number of fathers and the number of sons.
 
+# function that returns two dicts 
+def load_data(filename):
+    people_by_cpr = {} # cpr and all the info of that person's cpr
+    child_to_parents = {} # matches children their parents
+
+    for person in read_people_info(filename):
+        people_by_cpr[person.cpr] = person
+
+        for child in person.children:
+            if child not in child_to_parents:
+                child_to_parents[child] = []
+            child_to_parents[child].append(person.cpr)
+
+    return people_by_cpr, child_to_parents
+
+def exercise_17(people_by_cpr, child_to_parents):
+    donation_list = []
+
+    for person_cpr, person in people_by_cpr.items():
+        # Parents of the person
+        parents = child_to_parents.get(person_cpr, [])
+        grandparents = set()
+
+        # Search for grandparents
+        for parent_cpr in parents:
+            parent_parents = child_to_parents.get(parent_cpr, [])
+            for grandparent_cpr in parent_parents:
+                grandparents.add(grandparent_cpr)
+
+        # If the person does not have grandparents in the dataset, continue
+        if not grandparents:
+            continue
+
+        # Grandson's/Granddaughter's blood type
+        person_blood = person.blood_type[:-1]   # solo ABO
+        receivers = can_donate_blood(person_blood)
+
+        # Check if the grandson/granddaughter can donate to their grandparents
+        for grandparent_cpr in grandparents:
+            grandparent = people_by_cpr[grandparent_cpr]
+            grandparent_blood = grandparent.blood_type[:-1]
+
+            if grandparent_blood in receivers:
+                donation_list.append(
+                    (person.cpr, person.blood_type, grandparent.cpr, grandparent.blood_type)
+                )
+
+    # Delete duplicates
+    donation_list = list(set(donation_list))
+
+    unique_grandchildren = set()
+    unique_grandparents = set()
+
+    for grandchild_cpr, grandchild_blood, grandparent_cpr, grandparent_blood in donation_list:
+        unique_grandchildren.add(grandchild_cpr)
+        unique_grandparents.add(grandparent_cpr)
+
+    print("People who can donate blood to at least one grandparent:")
+    for grandchild_cpr, grandchild_blood, grandparent_cpr, grandparent_blood in sorted(donation_list):
+        print(f"{grandchild_cpr} ({grandchild_blood}) -> {grandparent_cpr} ({grandparent_blood})")
+
+    print()
+    print(f"Length of the list: {len(donation_list)}")
+    print(f"Number of grandchildren: {len(unique_grandchildren)}")
+    print(f"Number of grandparents: {len(unique_grandparents)}")
+
+
+people_by_cpr, child_to_parents = load_data("data/people.db")
+exercise_17(people_by_cpr, child_to_parents)
