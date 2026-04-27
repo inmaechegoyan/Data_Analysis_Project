@@ -56,6 +56,11 @@ people_with_grandparents = 0
 total_people = 0
 
 
+##### QUESTION 10 #####
+boys = 0
+girls = 0
+
+
 ##### QUESTION 14 #####
 fat_intervals = ["Underweight", "Normal weight", "Overweight", "Obese"]
 people_fat = [0] * len(fat_intervals)
@@ -145,6 +150,14 @@ for person in read_people_info('data/people.db'):   # THIS CAN ONLY APPEAR ONE I
             break
         if has_grandparents: 
             people_with_grandparents += 1
+    
+
+    # Q10
+    first_child_cpr = person.first_child_cpr()
+    if(person.children):
+        if int(first_child_cpr[-1]) % 2 == 0:
+            girls += 1
+        else: boys +=1
 
 
     # Q14
@@ -204,6 +217,9 @@ else:
 # Q8
 percentage_grandparents = (people_with_grandparents/total_people) * 100
 
+# Q10
+total_children = boys + girls
+
 
 
 
@@ -260,6 +276,11 @@ print(f'The age difference between the parents with a common kid is {avg_differe
 # Q8 
 print(f'The number of people that has at least one grandparent is {people_with_grandparents} which correspnd to the {percentage_grandparents:.2f}% of the people in the database')
 
+# Q10
+boys_percentage = (boys / total_children) *100
+girls_percentage =(girls / total_children) *100
+print(f"Firstborn likely to be female: {girls_percentage:.2f}%")
+print(f"Firstborn likely to be male: {boys_percentage:.2f}%")
 
 # Q14
 print("Distribution of people according to their weight and bmi")
