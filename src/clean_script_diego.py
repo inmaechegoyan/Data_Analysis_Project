@@ -4,7 +4,10 @@
 
 from data.clean_data_class import People
 from src.read_people_info import read_people_info
+from src.functions_diego import load_data
 
+
+people_by_cpr, child_to_parents, parent_to_children = load_data("data/people.db")
 
 #### VARIABLES FOR ALL THE QUESTION ####
 
@@ -47,19 +50,17 @@ mother_counts = [0] * len(age_intervals)
 woman_without_children = 0
 men_without_children = 0
 
-##### QUESTION 7 #####
-child_to_parents = dict()
-age_difference = []
-
 ##### QUESTION 8 #####
 people_with_grandparents = 0
 total_people = 0
 
+##### QUESTION 9 #####
+cousin_pairs = set()
 
 
 
-
-for person in read_people_info('data/people.db'):   # THIS CAN ONLY APPEAR ONE IN THE SCRIPT!!!!!!!
+#### LOOP ####
+for person in people_by_cpr.values():   # THIS CAN ONLY APPEAR ONE IN THE SCRIPT!!!!!!!
     person_cpr = person.cpr
     # Q1
     person_age = person.age
@@ -119,53 +120,45 @@ for person in read_people_info('data/people.db'):   # THIS CAN ONLY APPEAR ONE I
         if person.children == []:
             men_without_children += 1
 
-
-    # Create dict child_to_parents
-    for child in person.children: 
-        if child not in child_to_parents: 
-            child_to_parents[child] = []
-        child_to_parents[child].append(person)
-
-
     # Q8
+    total_people += 1
+    parents = child_to_parents.get(person.cpr, [])
 
-total_people += 1
+    # Find the grandparetns 
+    has_grandparents = False
 
-# Find the parents: 
-parents = child_to_parents.get(person.cpr, [])
-
-# Find the grandparetns 
-has_grandparents = False
-
-for parent in parents : 
-    grandparents = child_to_parents.get(parent.cpr, [])
-    if len(grandparents) > 0:  
-        has_grandparents = True
-        break
-if has_grandparents: 
-    people_with_grandparents += 1
-
-
-
-
-# Q7 
-for parents in child_to_parents.values(): 
-    if len(parents) >= 2: 
-        for i in range(len(parents)):
-            for j in range(i+1, len(parents)): 
-                diff = abs(parents[i].age - parents[j].age)
-                age_difference.append(diff)
+    for parent in parents : 
+        grandparents = child_to_parents.get(parent.cpr, [])
+        if len(grandparents) > 0:  
+            has_grandparents = True
+            break
+    if has_grandparents: 
+        people_with_grandparents += 1
     
-if len(age_difference) > 0: 
-    avg_difference = sum(age_difference) / len(age_difference)
-else: 
-    avg_difference = 0
 
+    # Q9
+    parents = child_to_parents.get(person.cpr, [])
 
+    for parent in parents:
+        grandparents = child_to_parents.get(parent.cpr, [])
 
+        for grandparent in grandparents:
+            siblings = parent_to_children.get(grandparent.cpr, [])
 
+            for sibling_cpr in siblings:
 
+                if sibling_cpr == parent.cpr:
+                    continue
 
+                cousins = parent_to_children.get(sibling_cpr, [])
+
+                for cousin_cpr in cousins:
+                    if cousin_cpr != person.cpr:
+                        cousin_pairs.add((person.cpr, cousin_cpr))
+    
+
+    
+    
 
 
 
@@ -181,8 +174,41 @@ avg_age_mother = age_count_mother / total_mother
 percent_women = (woman_without_children / total_female) * 100
 percent_men = (men_without_children / total_male) * 100
 
+# Q7
+age_difference = []
+for parents in child_to_parents.values(): 
+    if len(parents) >= 2: 
+        for i in range(len(parents)):
+            for j in range(i+1, len(parents)): 
+                diff = abs(parents[i].age - parents[j].age)
+                age_difference.append(diff)
+    
+if len(age_difference) > 0: 
+    avg_difference = sum(age_difference) / len(age_difference)
+else: 
+    avg_difference = 0
+
+
 # Q8
 percentage_grandparents = (people_with_grandparents/total_people) * 100
+
+# Q9
+cousin_per_person = {}
+
+for person_cpr, cousin_cpr in cousin_pairs:
+    if person_cpr not in cousin_per_person:
+        cousin_per_person[person_cpr] = set()
+
+    cousin_per_person[person_cpr].add(cousin_cpr)
+
+people_with_cousins = len(cousin_per_person)
+
+avg_cousins = (
+    sum(len(cousins) for cousins in cousin_per_person.values()) / people_with_cousins
+    if people_with_cousins > 0 else 0
+)
+
+
 
 
 
@@ -234,8 +260,12 @@ print(f"Women without children: {percent_women:.2f}%")
 print(f"Men without children: {percent_men:.2f}%")
 
 # Q7
+print(f'The age difference between the paretns with a common kid is {avg_difference:.2f} years')
 
-print(f'The age difference between the parents with a common kid is {avg_difference:.2f} years')
-
-# Q8 
+# Q8
 print(f'The number of people that has at least one grandparent is {people_with_grandparents} which correspnd to the {percentage_grandparents:.2f}% of the people in the database')
+
+
+# Q9
+print(f"The number of people that have cousins is {people_with_cousins}")
+print(f"The average number of cousins per person is {avg_cousins:.2f}")
