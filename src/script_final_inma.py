@@ -55,6 +55,14 @@ age_difference = []
 people_with_grandparents = 0
 total_people = 0
 
+# 
+person_to_partner = {}
+
+
+# 
+person_to_partner = {}
+
+
 
 ##### QUESTION 10 #####
 boys = 0
@@ -134,6 +142,14 @@ for person in read_people_info('data/people.db'):   # THIS CAN ONLY APPEAR ONE I
         if child not in child_to_parents: 
             child_to_parents[child] = []
         child_to_parents[child].append(person)
+
+
+#     # Q8
+
+# total_people += 1
+
+# # Find the parents: 
+# parents = child_to_parents.get(person.cpr, [])
     
     # Q8
     total_people += 1
