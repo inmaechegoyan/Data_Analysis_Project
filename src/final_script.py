@@ -222,6 +222,12 @@ for p in all_people:
 
 percentage_granparents = (people_with_grandparents /total_people) * 100
 
+# Q9 
+
+
+
+
+
 # Q10
 total_children = boys + girls
 boys_percentage = (boys / total_children)*100 if total_children else 0
@@ -291,11 +297,9 @@ total_couples = sum(count_couple_type.values())
 
 
 
-
-
-#####################
-####### PRINTS #####
-####################
+###################
+##### PRINTS #####
+##################
 
 # Q1
 
