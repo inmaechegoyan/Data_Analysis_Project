@@ -15,5 +15,7 @@ def load_data(filename):
                 child_to_parents[child_cpr] = []
 
             child_to_parents[child_cpr].append(person)
-
+    
     return people_by_cpr, child_to_parents, parent_to_children
+
+load_data('data/people.db')
