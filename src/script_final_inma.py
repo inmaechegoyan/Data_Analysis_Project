@@ -21,9 +21,9 @@ total_male = 0
 
 ##### QUESTION 2 #####
 
-max_age = 0
-min_age = 99
-age_count = 0 
+max_age_father = 0
+min_age_father = 99
+age_count_father = 0 
 total_father = 0
 
 
@@ -35,6 +35,9 @@ total_father = 0
 ##### QUESTION 4 #####
 
 total_mother = 0
+max_age_mother = 0
+min_age_mother = 99
+age_count_mother = 0
 
 ##### QUESTION 5 #####.     TODAS ESTAN INCLUIDAS EN OTRAS ACT (LO QUE NO SE ES SI HABRA QUE RESTART ALGUNAS VARIABLES DURANTE EL CODE)
 
@@ -63,12 +66,12 @@ for person in read_people_info('data/people.db'):   # THIS CAN ONLY APPEAR ONE I
     # Q2
     age_first_child = person.age_first_child()
     if person.gender == "M" and age_first_child is not None:
-        age_count += age_first_child
+        age_count_father += age_first_child
         total_father += 1
-        if age_first_child > max_age:
+        if age_first_child > max_age_father:
             max_age = age_first_child
-        if age_first_child < min_age:
-            min_age = age_first_child
+        if age_first_child < min_age_father:
+            min_age_father = age_first_child
 
     # Q3
     if person.gender == "M":
@@ -84,12 +87,13 @@ for person in read_people_info('data/people.db'):   # THIS CAN ONLY APPEAR ONE I
     # Q4
     age_first_child = person.age_first_child()
     if person.gender == "F" and age_first_child is not None:
-        age_count += age_first_child
+        age_count_mother += age_first_child
         total_mother += 1
-        if age_first_child > max_age:
-            max_age = age_first_child
-        if age_first_child < min_age:
-            min_age = age_first_child
+        if age_first_child > max_age_mother:
+            max_age_mother = age_first_child
+        if age_first_child < min_age_mother:
+            min_age_mother = age_first_child
+    
 
     # # Q5 y Q6
     # if person.gender == "F":
@@ -113,11 +117,11 @@ for person in read_people_info('data/people.db'):   # THIS CAN ONLY APPEAR ONE I
     if person.gender == "F":
         age = person.age_first_child()
         if age is not None:
-            total_mother += 1
+            # total_mother += 1
 
             for i, (low, high) in enumerate(age_intervals):
                 if low <= age <= high:
-                    female_counts[i] += 1
+                    # female_counts[i] += 1
                     break
 
 
@@ -129,10 +133,10 @@ for person in read_people_info('data/people.db'):   # THIS CAN ONLY APPEAR ONE I
 ##### CALCULATIONS AT THE END OF THE LOOP #### 
 
 # Q2
-avg_age = age_count / total_father
+avg_age_father = age_count_father / total_father
 
 # Q4
-avg_age = age_count / total_mother
+avg_age_mother = age_count_mother / total_mother
 
 # Q6 
 percent_women = (woman_without_children / total_female) * 100
@@ -156,9 +160,9 @@ for i, (low,high) in enumerate(age_intervals):
 
 # Q2
 
-print(f"Maximum age of first-time fathers: {max_age:.2f}")
-print(f"Minimum age of first-time fathers:{min_age:.2f}")
-print(f"Average age of first-time fathers::{avg_age:.2f}")
+print(f"Maximum age of first-time fathers: {max_age_father:.2f}")
+print(f"Minimum age of first-time fathers:{min_age_father:.2f}")
+print(f"Average age of first-time fathers::{avg_age_father:.2f}")
 
 # Q3
 
@@ -171,9 +175,9 @@ for i, (low, high) in enumerate(age_intervals):
 
 # Q4
 
-print(f"Maximum age of first-time mothers: {max_age:.2f}")
-print(f"Minimum age of first-time mothers:{min_age:.2f}")
-print(f"Average age of first-time mothers:{avg_age:.2f}")
+print(f"Maximum age of first-time mothers: {max_age_mother:.2f}")
+print(f"Minimum age of first-time mothers:{min_age_mother:.2f}")
+print(f"Average age of first-time mothers:{avg_age_mother:.2f}")
 
 
 # Q5 
