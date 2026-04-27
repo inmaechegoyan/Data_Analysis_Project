@@ -175,7 +175,7 @@ for parents in child_to_parents.values():
 
             person_to_partner[parent1.cpr].add(parent2.cpr)     # if the person is already in the dict, add the partner
 
-# Varibales: 
+# Variables: 
 
 male_total = 0
 female_total = 0

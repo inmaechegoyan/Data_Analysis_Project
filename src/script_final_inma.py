@@ -56,6 +56,10 @@ people_with_grandparents = 0
 total_people = 0
 
 
+##### QUESTION 14 #####
+fat_intervals = ["Underweight", "Normal weight", "Overweight", "Obese"]
+people_fat = [0] * len(fat_intervals)
+children_fat = [0] * len(fat_intervals)
 
 
 
@@ -125,45 +129,48 @@ for person in read_people_info('data/people.db'):   # THIS CAN ONLY APPEAR ONE I
         if child not in child_to_parents: 
             child_to_parents[child] = []
         child_to_parents[child].append(person)
-
-
-    # Q8
-
-total_people += 1
-
-# Find the parents: 
-parents = child_to_parents.get(person.cpr, [])
-
-# Find the grandparetns 
-has_grandparents = False
-
-for parent in parents : 
-    grandparents = child_to_parents.get(parent.cpr, [])
-    if len(grandparents) > 0:  
-        has_grandparents = True
-        break
-if has_grandparents: 
-    people_with_grandparents += 1
-
-
-
-
-# Q7 
-for parents in child_to_parents.values(): 
-    if len(parents) >= 2: 
-        for i in range(len(parents)):
-            for j in range(i+1, len(parents)): 
-                diff = abs(parents[i].age - parents[j].age)
-                age_difference.append(diff)
     
-if len(age_difference) > 0: 
-    avg_difference = sum(age_difference) / len(age_difference)
-else: 
-    avg_difference = 0
+    # Q8
+    total_people += 1
+    # Find the parents: 
+    parents = child_to_parents.get(person.cpr, [])
+
+    # Find the grandparetns 
+    has_grandparents = False
+
+    for parent in parents : 
+        grandparents = child_to_parents.get(parent.cpr, [])
+        if len(grandparents) > 0:  
+            has_grandparents = True
+            break
+        if has_grandparents: 
+            people_with_grandparents += 1
 
 
+    # Q14
+
+    bmi = person.bmi()
+    if bmi is None:
+        continue
+    if(bmi < 18.5):
+        people_fat[0] += 1
+        if(person.children):
+            children_fat[0] += 1
+    elif( bmi < 24.9):
+        people_fat[1] += 1
+        if(person.children):
+            children_fat[1] += 1
+    elif(bmi < 29.9):
+        people_fat[2] += 1
+        if(person.children):
+            children_fat[2] += 1
+    elif( 29.9 < bmi):
+        people_fat[3] += 1
+        if(person.children):
+            children_fat[3] += 1    
 
 
+    
 
 
 
@@ -180,6 +187,19 @@ avg_age_mother = age_count_mother / total_mother
 # Q6 
 percent_women = (woman_without_children / total_female) * 100
 percent_men = (men_without_children / total_male) * 100
+
+# Q7 
+for parents in child_to_parents.values(): 
+    if len(parents) >= 2: 
+        for i in range(len(parents)):
+            for j in range(i+1, len(parents)): 
+                diff = abs(parents[i].age - parents[j].age)
+                age_difference.append(diff)
+    
+if len(age_difference) > 0: 
+    avg_difference = sum(age_difference) / len(age_difference)
+else: 
+    avg_difference = 0
 
 # Q8
 percentage_grandparents = (people_with_grandparents/total_people) * 100
@@ -239,3 +259,16 @@ print(f'The age difference between the parents with a common kid is {avg_differe
 
 # Q8 
 print(f'The number of people that has at least one grandparent is {people_with_grandparents} which correspnd to the {percentage_grandparents:.2f}% of the people in the database')
+
+
+# Q14
+print("Distribution of people according to their weight and bmi")
+for i, label in enumerate(fat_intervals):
+    fat_percentage = (people_fat[i] / total_people) * 100 if total_people > 0 else 0
+    print(f"{label}  {fat_percentage:.2f}%  ({people_fat[i]}/{total_people})") 
+
+print("")
+print("Distribution of people having children according to their weight and bmi")
+for i, label in enumerate(fat_intervals):
+    children_fat_percentage = (children_fat[i] / people_fat[i]) * 100 if total_people > 0 else 0
+    print(f"{label}  {children_fat_percentage:.2f}%  ({children_fat[i]}/{people_fat[i]})") 
