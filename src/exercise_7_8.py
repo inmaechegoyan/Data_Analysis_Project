@@ -202,10 +202,9 @@ women_more_partner = (female_pluspartner/female_total)*100 if female_total > 0 e
 
 ## Display RESULT ##
 
-print(f'{'':25}{'Men':5}{'Women':5}')
-print(f'{'Multiple partners (%)':25}{men_more_partner:5}{women_more_partner:5}')
-print(f'{'Total':25}{male_total:5}{female_total:5}') 
-
+print(f"{'':25}{'Men':5}{'Women':5}")
+print(f"{'Multiple partners (%)':25}{men_more_partner:5}{women_more_partner:5}")
+print(f"{'Total':25}{male_total:5}{female_total:5}")
 
 
 
@@ -263,7 +262,7 @@ total_couples = sum(count_couple_type.values())
 # Display result:
 
 
-print(f'{'Couple Type':20} {'Porcentage':8}')
+print(f"{'Couple Type':20} {'Percentage':>10}")
 for couple, count in count_couple_type.items(): 
     percentage_couple_types = (count/total_couples)*100
     print(f'{str(couple):20}: {percentage_couple_types:8.2f}%')

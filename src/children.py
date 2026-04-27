@@ -29,7 +29,7 @@ print(f"Minimum age of first-time fathers:{min_age:.2f}")
 print(f"Average age of first-time fathers::{avg_age:.2f}")
 
 # 3. Is the distribution of first-time fatherhood age normal/sensible? A yes/no answer is not good enough.
-age_intervals = [(15, 19), (20, 24), (25, 29), (30, 34), (35, 39), (40, 99)]
+age_intervals = [(0, 10), (10, 20), (20, 30), (30, 40), (40, 50), (50, 60), (60,70), (70,80), (80,90), (90,100)]
 male_counts = [0] * len(age_intervals)
 total_father = 0
 for person in read_people_info('data/people.db'):
@@ -78,7 +78,7 @@ print(f"Average age of first-time mothers:{avg_age:.2f}")
       
 
 # 5. Is the distribution of first-time motherhood age normal/sensible? A yes/no answer is not good enough.
-age_intervals = [(15, 19), (20, 24), (25, 29), (30, 34), (35, 39), (40, 99)]
+age_intervals = [(0, 10), (10, 20), (20, 30), (30, 40), (40, 50), (50, 60), (60,70), (70,80), (80,90), (90,100)]
 female_counts = [0] * len(age_intervals)
 total_mother = 0
 for person in read_people_info('data/people.db'):
