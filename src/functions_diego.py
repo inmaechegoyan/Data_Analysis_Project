@@ -1,0 +1,1 @@
+from data.clean_data_class import People
