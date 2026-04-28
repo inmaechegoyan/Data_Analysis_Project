@@ -53,15 +53,62 @@ def read_people_info(filename):
     except IOError as error: 
         print('Cannot open file.Reason: ' + str(error))
 
+def height_category(person): 
+    if person.gender == 'M':
+        if person.height > 187:
+            return 'tall'
+        elif person.height >= 173:
+            return 'normal'
+        else: 
+            return 'short'
+    else:
+        if person.height > 175:
+            return 'tall'
+        elif person.height >= 160:
+            return 'normal'
+        else: 
+            return 'short'
+        
 
-# Execute the program 
-# for person in read_people_info('people.db'):
-#     print(person.cpr)
-#     print(person.first_name)
-#     print(person.last_name)
-#     print(person.height)
-#     print(person.weight)
-#     print(person.eye_color)
-#     print(person.blood_type)
-#     print(person.children)
-#     print(person.age)
+def possible_child_blood(parent1, parent2):
+    if parent1 == "A" and parent2 == "A":
+        return {"A", "O"}
+    elif (parent1 == "A" and parent2 == "O") or (parent1 == "O" and parent2 == "A"):
+        return {"A", "O"}
+    elif (parent1 == "A" and parent2 == "B") or (parent1 == "B" and parent2 == "A"):
+        return {"A", "B", "AB", "O"}
+    elif parent1 == "B" and parent2 == "B":
+        return {"B", "O"}
+    elif (parent1 == "B" and parent2 == "O") or (parent1 == "O" and parent2 == "B"):
+        return {"B", "O"}
+    elif parent1 == "O" and parent2 == "O":
+        return {"O"}
+    elif (parent1 == "AB" and parent2 == "A") or (parent1 == "A" and parent2 == "AB"):
+        return {"A", "B", "AB"}
+    elif (parent1 == "AB" and parent2 == "B") or (parent1 == "B" and parent2 == "AB"):
+        return {"A", "B", "AB"}
+    elif parent1 == "AB" and parent2 == "AB":
+        return {"A", "B", "AB"}
+    elif (parent1 == "AB" and parent2 == "O") or (parent1 == "O" and parent2 == "AB"):
+        return {"A", "B"}
+    return set()
+
+def possible_child_rh(parent1, parent2):
+    if parent1 == "+" and parent2 == "+":
+        return {"+", "-"}
+    elif (parent1 == "+" and parent2 == "-") or (parent1 == "-" and parent2 == "+"):
+        return {"+", "-"}
+    elif (parent1 == "-" and parent2 == "-"):
+        return {"-"}
+    return set()
+
+def can_donate_blood(blood_type):
+    if blood_type == "A" :
+        return {"A", "AB"}
+    elif (blood_type == "B"):
+        return {"B", "AB"}
+    elif (blood_type == "AB"):
+        return {"AB"}
+    elif (blood_type == "O"):
+        return {"A","B","O","AB"}
+    return set()

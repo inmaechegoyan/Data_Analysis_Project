@@ -2,27 +2,10 @@
 
 from data.clean_data_class import People
 from src.read_people_info import read_people_info
-
-
-########################
-# FUNCTIONS
-######################## igual tenemos que ponerla en otro lado
-
-def height_category(person): 
-    if person.gender == 'M':
-        if person.height > 187:
-            return 'tall'
-        elif person.height >= 173:
-            return 'normal'
-        else: 
-            return 'short'
-    else:
-        if person.height > 175:
-            return 'tall'
-        elif person.height >= 160:
-            return 'normal'
-        else: 
-            return 'short'
+from src.read_people_info import height_category
+from src.read_people_info import possible_child_blood
+from src.read_people_info import possible_child_rh
+from src.read_people_info import can_donate_blood
 
 
 ########################
@@ -150,7 +133,10 @@ for person in read_people_info('data/people.db'):
         if child not in child_to_parents: 
             child_to_parents[child] = []
         child_to_parents[child].append(cpr)
+
     
+
+
     # Q10
 
     first_child_cpr = person.first_child_cpr()
@@ -224,6 +210,46 @@ percentage_granparents = (people_with_grandparents /total_people) * 100
 
 # Q9 
 
+cousins_pair = []
+
+for person in all_people:
+    # For each person get the parents: 
+    parents = child_to_parents.get(person, [])
+
+        # For each parent in the list, get their parents (grandparents)
+    for parent in parents: 
+        gransparents = child_to_parents.get(parent, [])
+
+        for grandparent in gransparents: 
+            siblings = parent_to_children.get(grandparent,[])
+
+            for sibling in siblings: 
+                # We dont want to take the parents of the current person, just the incles or aunties 
+                if sibling == parent: 
+                    continue
+
+                # Kids from uncles and aunts: 
+                cousins = parent_to_children.get(sibling,[])
+
+                for cousin in cousins: 
+                    # Cannot count the current person: 
+                    if cousin != person: 
+                        cousins_pair.append((person,cousin))
+
+# We will have duplicates, so we have to do a set to erase them
+cousins_pair = list(set(cousins_pair))
+length = len(cousins_pair)
+
+# calculate cousin average: 
+
+counsin_per_person = {}
+for a,b in cousins_pair: 
+    if a not in counsin_per_person:
+        counsin_per_person[a] = set()
+    counsin_per_person[a].add(b)
+
+avg = sum(len(v) for v in counsin_per_person.values()) / len(counsin_per_person)
+
 
 
 
@@ -294,6 +320,36 @@ for parents in child_to_parents.values():
 
 total_couples = sum(count_couple_type.values())
 
+# Q13
+
+tall_and_tall = 0
+parent_tall_total = 0
+
+for child, parents in child_to_parents.items():
+    if len(parents) < 2: 
+        continue
+
+    # obtain parents height
+    parent_categories = []
+
+    for parent in parents: 
+        parent_categories.append(height_category_by_cpr[parent])
+
+    # check if all the parents of a child are tall 
+    all_parents_tall  = True
+
+    for p in parent_categories: 
+        if p != 'tall':
+            all_parents_tall = False
+            break
+
+    # check if both parents are tall: 
+    if all_parents_tall: 
+        parent_tall_total += 1
+
+        # check if the kid is also tall 
+        if height_category_by_cpr[child] == 'tall': 
+            tall_and_tall += 1
 
 
 
@@ -302,6 +358,7 @@ total_couples = sum(count_couple_type.values())
 ##################
 
 # Q1
+print('\nQ1\n')
 
 for i, (low,high) in enumerate(age_intervals):
     female_porcentage = ((female_counts[i]/total_female) * 100) if total_female > 0 else 0
@@ -312,11 +369,15 @@ for i, (low,high) in enumerate(age_intervals):
 
 # Q2
 
+print('\nQ2\n')
+
 print(f"Maximum age of first-time fathers: {max_age_father:.2f}")
 print(f"Minimum age of first-time fathers:{min_age_father:.2f}")
 print(f"Average age of first-time fathers::{avg_age_father:.2f}")
 
 # Q3
+
+print('\nQ3\n')
 
 print(f"{'Age range':<10} {'Male %':<10}")
 
@@ -326,6 +387,7 @@ for i, (low, high) in enumerate(age_intervals):
 
 
 # Q4
+print('\nQ4\n')
 
 print(f"Maximum age of first-time mothers: {max_age_mother:.2f}")
 print(f"Minimum age of first-time mothers:{min_age_mother:.2f}")
@@ -333,6 +395,8 @@ print(f"Average age of first-time mothers:{avg_age_mother:.2f}")
 
 
 # Q5 
+print('\nQ5\n')
+
 print(f"{'Age range':<10} {'Female %':<10}")
 
 for i, (low, high) in enumerate(age_intervals):
@@ -340,21 +404,73 @@ for i, (low, high) in enumerate(age_intervals):
     print(f"{low}-{high:<8} {female_percentage:<10.2f}") 
 
 # Q6
+
+print('\nQ6\n')
+
 print(f"Women without children: {percent_women:.2f}%")
 print(f"Men without children: {percent_men:.2f}%")
 
 # Q7
-
+print('\nQ7\n')
 print(f'The age difference between the parents with a common kid is {avg_difference:.2f} years')
 
 # Q8 
+print('\nQ8\n')
 print(f'The number of people that has at least one grandparent is {people_with_grandparents} which correspnd to the {percentage_granparents:.2f}% of the people in the database')
+
+# Q9
+
+print('\nQ9\n')
+print(f'The number of people that have cousins is {length} people')
+
+print(f'The average number of cousins per person is {avg:.2f}')
+
+# Q10
+print('\nQ10\n')
+
+print(f"Firstborn likely to be female: {girls_percentage:.2f}%")
+print(f"Firstborn likely to be male: {boys_percentage:.2f}%")
+   
+# Q11
+print('\nQ11\n')
+
+print(f"{'':25}{'Men':5}{'Women':5}")
+print(f"{'Multiple partners (%)':25}{men_more_partner:5}{women_more_partner:5}")
+print(f"{'Total':25}{male_total:5}{female_total:5}")
 
 
 # Q12
+
+print('\nQ12\n')
 
 print(f"{'Couple Type':20} {'Percentage':>10}")
 for couple, count in count_couple_type.items(): 
     percentage_couple_types = (count/total_couples)*100
     print(f'{str(couple):20}: {percentage_couple_types:8.2f}%')
+
+# Q13
+
+print('\nQ13\n')
+
+if parent_tall_total > 0 : 
+    probability = tall_and_tall / parent_tall_total
+    print(f'P(tall child | tall parents) = {probability:.2f}')
+else: 
+    print('There is no enought data')
+
+# Q14
+
+print('\nQ14\n')
+
+print("Distribution of people according to their weight and bmi")
+for i, label in enumerate(fat_intervals):
+    fat_percentage = (people_fat[i] / total_people) * 100 if total_people > 0 else 0
+    print(f"{label}  {fat_percentage:.2f}%  ({people_fat[i]}/{total_people})") 
+
+print("")
+print("Distribution of people having children according to their weight and bmi")
+for i, label in enumerate(fat_intervals):
+    children_fat_percentage = (children_fat[i] / people_fat[i]) * 100 if total_people > 0 else 0
+    print(f"{label}  {children_fat_percentage:.2f}%  ({children_fat[i]}/{people_fat[i]})") 
+
 

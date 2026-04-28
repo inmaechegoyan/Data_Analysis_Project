@@ -39,7 +39,7 @@ for person in read_people_info('data/people.db'):
             total_father += 1
 
             for i, (low, high) in enumerate(age_intervals):
-                if low <= age <= high:
+                if low <= age <= high:  # Creo que esta mal, no puede haber un igual en ambos 
                     male_counts[i] += 1
                     break
 
@@ -88,7 +88,7 @@ for person in read_people_info('data/people.db'):
             total_mother += 1
 
             for i, (low, high) in enumerate(age_intervals):
-                if low <= age <= high:
+                if low <= age <= high:  # same problem
                     female_counts[i] += 1
                     break
 
