@@ -66,7 +66,8 @@ fat_intervals = ["Underweight", "Normal weight", "Overweight", "Obese"]
 people_fat = [0] * len(fat_intervals)
 children_fat = [0] * len(fat_intervals)
 
-
+# Q15
+blood_type_by_cpr = dict()
 
 #####################
 ### SINGLE PASSS ###
@@ -83,6 +84,7 @@ for person in read_people_info('data/people.db'):
     height_category_by_cpr[cpr] = height_category(person)
     parent_to_children[cpr] = person.children
     age_by_cpr[cpr] = person.age
+    blood_type_by_cpr[cpr] = person.blood_type
 
     # Q1
     for i, (low,high) in enumerate(age_intervals): 
@@ -352,6 +354,106 @@ for child, parents in child_to_parents.items():
         if height_category_by_cpr[child] == 'tall': 
             tall_and_tall += 1
 
+# Q15
+
+incompatible_children = []
+
+for child, parents in child_to_parents.items():
+
+    if child not in blood_type_by_cpr:
+        continue
+
+    if len(parents) != 2:
+        continue
+
+    parent1 = parents[0]
+    parent2 = parents[1]
+
+    parent1_blood = blood_type_by_cpr[parent1][:-1]
+    parent2_blood = blood_type_by_cpr[parent2][:-1]
+    child_blood = blood_type_by_cpr[child][:-1]
+
+    parent1_rh = blood_type_by_cpr[parent1][-1]
+    parent2_rh = blood_type_by_cpr[parent2][-1]
+    child_rh = blood_type_by_cpr[child][-1]
+
+    possible_blood = possible_child_blood(parent1_blood, parent2_blood)
+    possible_rh = possible_child_rh(parent1_rh, parent2_rh)
+
+    if child_blood not in possible_blood or child_rh not in possible_rh:
+        incompatible_children.append(child)
+
+
+# Q16
+
+father_son_donations = []
+
+for son, parents in child_to_parents.items():
+
+    if son not in blood_type_by_cpr:
+        continue
+
+    if gender_by_cpr.get(son) != "M":
+        continue
+
+    son_blood = blood_type_by_cpr[son][:-1]
+
+    for parent in parents:
+
+        if gender_by_cpr.get(parent) != "M":
+            continue
+
+        father_blood = blood_type_by_cpr[parent][:-1]
+        possible_receivers = can_donate_blood(father_blood)
+
+        if son_blood in possible_receivers:
+            father_son_donations.append(
+                (parent, blood_type_by_cpr[parent], son, blood_type_by_cpr[son])
+            )
+
+unique_fathers = set()
+unique_sons = set()
+
+for father, father_blood, son, son_blood in father_son_donations:
+    unique_fathers.add(father)
+    unique_sons.add(son)
+
+
+# Q17
+
+grandchild_grandparent_donations = []
+seen_grandchildren = set()
+
+for person in all_people:
+
+    if person in seen_grandchildren:
+        continue
+
+    parents = child_to_parents.get(person, [])
+    grandparents = set()
+
+    for parent in parents:
+        parent_parents = child_to_parents.get(parent, [])
+
+        for grandparent in parent_parents:
+            grandparents.add(grandparent)
+
+    if not grandparents:
+        continue
+
+    person_blood = blood_type_by_cpr[person]  # e.g. "O-", "A+"
+    possible_receivers = can_donate_blood(person_blood)
+
+    for grandparent in grandparents:
+        grandparent_blood = blood_type_by_cpr[grandparent]
+
+        if grandparent_blood in possible_receivers:
+            grandchild_grandparent_donations.append(
+                (person, person_blood, grandparent, grandparent_blood)
+            )
+            seen_grandchildren.add(person)
+            break
+
 
 
 ###################
@@ -475,3 +577,36 @@ for i, label in enumerate(fat_intervals):
     print(f"{label}  {children_fat_percentage:.2f}%  ({children_fat[i]}/{people_fat[i]})") 
 
 
+# Q15
+
+print('\nQ15\n')
+
+print("Children with incompatible blood type inheritance:")
+for child in incompatible_children:
+    print(f"{child} ({blood_type_by_cpr[child]})")
+
+print(f"Number of possible non-biological children: {len(incompatible_children)}")
+
+# Q16
+
+print('\nQ16\n')
+
+print("Fathers who can donate blood to their sons:")
+for father, father_blood, son, son_blood in father_son_donations:
+    print(f"{father} ({father_blood}) -> {son} ({son_blood})")
+
+print(f"Length of the list: {len(father_son_donations)}")
+print(f"Number of fathers: {len(unique_fathers)}")
+print(f"Number of sons: {len(unique_sons)}")
+
+
+# Q17
+
+print('\nQ17\n')
+
+print("People who can donate blood to at least one grandparent:")
+for grandchild, grandchild_blood, grandparent, grandparent_blood in sorted(grandchild_grandparent_donations):
+    print(f"{grandchild} ({grandchild_blood}) -> {grandparent} ({grandparent_blood})")
+
+print(f"Length of the list: {len(grandchild_grandparent_donations)}")
+print(f"Number of grandchildren: {len(seen_grandchildren)}")

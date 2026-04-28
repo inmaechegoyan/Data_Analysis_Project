@@ -188,7 +188,7 @@ def exercise_17(people_by_cpr, child_to_parents):
 
     print("People who can donate blood to at least one grandparent:")
     for grandchild_cpr, grandchild_blood, grandparent_cpr, grandparent_blood in sorted(donation_list):
-        print(f"{grandchild_cpr} ({grandchild_blood}) -> {grandparent_cpr} ({grandparent_blood})")
+       print(f"{grandchild_cpr} ({grandchild_blood}) -> {grandparent_cpr} ({grandparent_blood})")
 
     print()
     print(f"Length of the list: {len(donation_list)}")
@@ -198,3 +198,4 @@ def exercise_17(people_by_cpr, child_to_parents):
 
 people_by_cpr, child_to_parents = load_data("data/people.db")
 exercise_17(people_by_cpr, child_to_parents)
+

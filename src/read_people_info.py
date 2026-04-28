@@ -102,13 +102,26 @@ def possible_child_rh(parent1, parent2):
         return {"-"}
     return set()
 
-def can_donate_blood(blood_type):
-    if blood_type == "A" :
-        return {"A", "AB"}
-    elif (blood_type == "B"):
-        return {"B", "AB"}
-    elif (blood_type == "AB"):
-        return {"AB"}
-    elif (blood_type == "O"):
-        return {"A","B","O","AB"}
-    return set()
+def can_donate_blood(full_blood_type):
+    abo = full_blood_type[:-1]
+    rh = full_blood_type[-1]
+
+    abo_receivers = {
+        "O": {"O", "A", "B", "AB"},
+        "A": {"A", "AB"},
+        "B": {"B", "AB"},
+        "AB": {"AB"}
+    }
+
+    rh_receivers = {
+        "-": {"-", "+"},
+        "+": {"+"}
+    }
+
+    possible_receivers = set()
+
+    for receiver_abo in abo_receivers[abo]:
+        for receiver_rh in rh_receivers[rh]:
+            possible_receivers.add(receiver_abo + receiver_rh)
+
+    return possible_receivers
