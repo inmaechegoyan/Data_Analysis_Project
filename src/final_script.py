@@ -251,7 +251,8 @@ for a,b in cousins_pair:
         counsin_per_person[a] = set()
     counsin_per_person[a].add(b)
 
-avg = sum(len(v) for v in counsin_per_person.values()) / len(counsin_per_person)
+avg = (sum(len(v) for v in counsin_per_person.values()) / len(counsin_per_person)
+if counsin_per_person else 0)
 
 
 
@@ -384,6 +385,7 @@ for child, parents in child_to_parents.items():
         incompatible_children.append(child)
 
 
+
 # Q16
 
 father_son_donations = []
@@ -396,19 +398,26 @@ for son, parents in child_to_parents.items():
     if gender_by_cpr.get(son) != "M":
         continue
 
-    son_blood = blood_type_by_cpr[son][:-1]
+    son_blood = blood_type_by_cpr[son]
+
+    if not son_blood:
+        continue
 
     for parent in parents:
 
         if gender_by_cpr.get(parent) != "M":
             continue
 
-        father_blood = blood_type_by_cpr[parent][:-1]
+        father_blood = blood_type_by_cpr[parent]
+
+        if not father_blood:
+            continue
+
         possible_receivers = can_donate_blood(father_blood)
 
         if son_blood in possible_receivers:
             father_son_donations.append(
-                (parent, blood_type_by_cpr[parent], son, blood_type_by_cpr[son])
+                (parent, father_blood, son, son_blood)
             )
 
 unique_fathers = set()
@@ -452,7 +461,7 @@ for person in all_people:
                 (person, person_blood, grandparent, grandparent_blood)
             )
             seen_grandchildren.add(person)
-            break
+            
 
 
 
@@ -573,7 +582,7 @@ for i, label in enumerate(fat_intervals):
 print("")
 print("Distribution of people having children according to their weight and bmi")
 for i, label in enumerate(fat_intervals):
-    children_fat_percentage = (children_fat[i] / people_fat[i]) * 100 if total_people > 0 else 0
+    children_fat_percentage = (children_fat[i] / people_fat[i]) * 100 if people_fat[i] > 0 else 0
     print(f"{label}  {children_fat_percentage:.2f}%  ({children_fat[i]}/{people_fat[i]})") 
 
 
