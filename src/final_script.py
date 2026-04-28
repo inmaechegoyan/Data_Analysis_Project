@@ -103,8 +103,8 @@ for person in read_people_info('data/people.db'):
         max_age_father = max(max_age_father, age_fc)
         min_age_father = min(min_age_father, age_fc)
 
-        for i,(l,h) in enumerate(age_intervals):
-            if l <= age_fc < h:
+        for i,(low,high) in enumerate(age_intervals):
+            if low <= age_fc < high:
                 father_counts[i] += 1
                 break
     
@@ -216,11 +216,12 @@ for person in all_people:
     # For each person get the parents: 
     parents = child_to_parents.get(person, [])
 
-        # For each parent in the list, get their parents (grandparents)
+    # For each parent in the list, get their parents (grandparents)
     for parent in parents: 
-        gransparents = child_to_parents.get(parent, [])
+        grandparents = child_to_parents.get(parent, [])
 
-        for grandparent in gransparents: 
+        # For each grandparent, obtain their kids (aunt/uncles + parents)
+        for grandparent in grandparents: 
             siblings = parent_to_children.get(grandparent,[])
 
             for sibling in siblings: 
