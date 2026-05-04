@@ -8,6 +8,18 @@ from src.read_people_info import possible_child_rh
 from src.read_people_info import can_donate_blood
 
 
+##################################
+###### Compelexity Notation ######
+##################################
+
+"""
+n = total number of people in the database
+k = average number of children / familily relation per person 
+m = total numeber of parent-child relationships
+
+"""
+
+
 ########################
 ####### VARIABLES ######
 ########################
@@ -69,25 +81,28 @@ children_fat = [0] * len(fat_intervals)
 # Q15
 blood_type_by_cpr = dict()
 
+
 #####################
 ### SINGLE PASSS ###
 ####################
 
+# read_people_info go through the database only once : O(n)
 
-for person in read_people_info('data/people.db'):
+for person in read_people_info('data/people.db'):   # O(n)
     
-    cpr = person.cpr
-    all_people.add(cpr)
-    total_people += 1
+    cpr = person.cpr                                # O(1)
+    all_people.add(cpr)                             # O(1)
+    total_people += 1                               # O(1)
 
-    gender_by_cpr[cpr] = person.gender
-    height_category_by_cpr[cpr] = height_category(person)
-    parent_to_children[cpr] = person.children
+    gender_by_cpr[cpr] = person.gender              # O(1)
+    height_category_by_cpr[cpr] = height_category(person)    # O(1)
+    parent_to_children[cpr] = person.children       # O(1)
     age_by_cpr[cpr] = person.age
-    blood_type_by_cpr[cpr] = person.blood_type
+    blood_type_by_cpr[cpr] = person.blood_type      # O(1)
 
     # Q1
-    for i, (low,high) in enumerate(age_intervals): 
+    # age_interval has a fixed size (10)
+    for i, (low,high) in enumerate(age_intervals):       # O(1)
         if low <= person.age < high: 
             if person.gender == 'F': 
                 total_female += 1
@@ -105,7 +120,7 @@ for person in read_people_info('data/people.db'):
         max_age_father = max(max_age_father, age_fc)
         min_age_father = min(min_age_father, age_fc)
 
-        for i,(low,high) in enumerate(age_intervals):
+        for i,(low,high) in enumerate(age_intervals):      # O(1)
             if low <= age_fc < high:
                 father_counts[i] += 1
                 break
@@ -118,7 +133,7 @@ for person in read_people_info('data/people.db'):
             max_age_mother = max(max_age_mother, age_fc)
             min_age_mother = min(min_age_mother, age_fc)
 
-            for i,(l,h) in enumerate(age_intervals):
+            for i,(l,h) in enumerate(age_intervals):      # O(1)
                 if l <= age_fc < h:
                     mother_counts[i] += 1
                     break
@@ -131,17 +146,17 @@ for person in read_people_info('data/people.db'):
 
     
     # Create dict child_to_parents (Q7 base)
-    for child in person.children: 
-        if child not in child_to_parents: 
-            child_to_parents[child] = []
-        child_to_parents[child].append(cpr)
+    for child in person.children:             # O(k)
+        if child not in child_to_parents:     # O(1)
+            child_to_parents[child] = []      # O(1)
+        child_to_parents[child].append(cpr)   # O(1)
 
     
 
 
     # Q10
 
-    first_child_cpr = person.first_child_cpr()
+    first_child_cpr = person.first_child_cpr()  # O(1)
     if(person.children):
         if int(first_child_cpr[-1]) % 2 == 0:
             girls += 1
@@ -149,7 +164,7 @@ for person in read_people_info('data/people.db'):
 
     # Q14
 
-    bmi = person.bmi()
+    bmi = person.bmi()                         # O(1)
     if bmi is None:
         continue
     if(bmi < 18.5):
@@ -188,7 +203,7 @@ percent_men = (men_without_children / total_male)*100 if total_male else 0
 
 age_difference = []
 
-for parents in child_to_parents.values():
+for parents in child_to_parents.values():      # O(n)
     if len(parents) >= 2:
         for i in range(len(parents)):
             for j in range(i+1, len(parents)):
@@ -201,9 +216,9 @@ avg_difference = sum(age_difference) / len(age_difference) if age_difference els
 
 # Q8 
 
-for p in all_people: 
+for p in all_people:                             # O(n)
     parents = child_to_parents.get(p, [])
-    for parent in parents: 
+    for parent in parents:                       # O(k)
         if child_to_parents.get(parent):
             people_with_grandparents += 1
             break
@@ -214,7 +229,7 @@ percentage_granparents = (people_with_grandparents /total_people) * 100
 
 cousins_pair = []
 
-for person in all_people:
+for person in all_people:                          # O(n)
     # For each person get the parents: 
     parents = child_to_parents.get(person, [])
 
@@ -268,7 +283,7 @@ girls_percentage = (girls / total_children)*100 if total_children else 0
 # Q11
 person_to_partner = {}
 
-for parents in child_to_parents.values(): 
+for parents in child_to_parents.values():         # O(n)
     if len(parents) < 2: 
         continue    # There is no co-parenting 
     
@@ -310,7 +325,7 @@ women_more_partner = (female_pluspartner/female_total)*100 if female_total > 0 e
 
 count_couple_type = dict()
 
-for parents in child_to_parents.values():
+for parents in child_to_parents.values():          # O(n)
     if len(parents) < 2: 
         continue
 
@@ -329,7 +344,7 @@ total_couples = sum(count_couple_type.values())
 tall_and_tall = 0
 parent_tall_total = 0
 
-for child, parents in child_to_parents.items():
+for child, parents in child_to_parents.items():       # O(n)
     if len(parents) < 2: 
         continue
 
@@ -359,7 +374,7 @@ for child, parents in child_to_parents.items():
 
 incompatible_children = []
 
-for child, parents in child_to_parents.items():
+for child, parents in child_to_parents.items():            # O(n)
 
     if child not in blood_type_by_cpr:
         continue
@@ -390,7 +405,7 @@ for child, parents in child_to_parents.items():
 
 father_son_donations = []
 
-for son, parents in child_to_parents.items():
+for son, parents in child_to_parents.items():                   # O(n)
 
     if son not in blood_type_by_cpr:
         continue
@@ -403,7 +418,7 @@ for son, parents in child_to_parents.items():
     if not son_blood:
         continue
 
-    for parent in parents:
+    for parent in parents:                                       # O(k)
 
         if gender_by_cpr.get(parent) != "M":
             continue
@@ -433,7 +448,7 @@ for father, father_blood, son, son_blood in father_son_donations:
 grandchild_grandparent_donations = []
 seen_grandchildren = set()
 
-for person in all_people:
+for person in all_people:                                      # O(n)
 
     if person in seen_grandchildren:
         continue
@@ -619,3 +634,15 @@ for grandchild, grandchild_blood, grandparent, grandparent_blood in sorted(grand
 
 print(f"Length of the list: {len(grandchild_grandparent_donations)}")
 print(f"Number of grandchildren: {len(seen_grandchildren)}")
+
+
+
+
+
+##################################
+####### Overall Complexity ######
+#################################
+
+# Worst case: O(n * k^4) 
+# Expected case : O(n), assuming bounded family size 
+
