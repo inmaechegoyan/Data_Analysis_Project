@@ -39,6 +39,28 @@ No external libraries are required
 # How to run 
 python -m src.main
 
+# Features
+
+- Age distribution analysis by gender
+- First-time paret age statistics
+- Family relationship reconstruction (parents, children, grandparents, cousins)
+- BMI classification analysis
+- Blood type inheritance validation 
+- Blood donation compatibility analysis
+
+# Complexity Analysis
+
+- Notation : 
+    n = number of people in the database
+    k = average number of familiy per person 
+    m = total number of parent-child relationships
+
+- Time complexity: 
+    Most operations are linear over the dataset : O(n)
+    Worst-case complexity : O(n * k^4)
+    Practical complexity (bounded family size) : O(n)
+
+
 # Authors 
 
 Inmaculada Ehegoyan Venegas
