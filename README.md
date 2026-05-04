@@ -1,13 +1,45 @@
 # Data_Analysis_Project
-Project for Python Advanced 2. Analyzing specific data and answer questions about it.
 
-## 1. Clean Data
-The clean_data file contains the code that transforms the raw data into a structured and clean data.
-First, a dictionary called "people" is created, where the CPR numbers are used as keys. Then, each CPR corresponds to a nested dictionary that stores the information of a single individual. Each of these dictionaries can contain the following attributes: 
-- First name
-- Last name
-- Height
-- Weight
-- Eye color
-- Blood type
-- Children
+# Overview
+
+This project performs a complete analysis of a population dataset stores in a database ('people.db'). In processes demographic, family realtionship, and blood compatibility data to generate statistical insights. 
+
+The analysis is performed in a sinfle pass over the dataset to ensure efficiency and scalability 
+
+
+# Project Structure
+Data_Analysis_Project
+│
+├── data/
+│ └── people.db # Database containing all people information
+│
+├── src/
+│ ├── functions.py # Core analysis functions
+│ ├── main.py # Main script (entry point)
+│ ├── people_class.py # People class definition
+│
+├── test/
+│ ├── class_People_test.py
+│ ├── functions_test.py
+|
+│── test_data/
+│ ├── test_people.db
+|
+├── README.md
+└── pyproject.toml
+
+
+# Requirements
+ 
+Python 3.11 or higher 
+
+No external libraries are required 
+
+
+# How to run 
+python -m src.main
+
+# Authors 
+
+Inmaculada Ehegoyan Venegas
+Diego Medina Castelló
