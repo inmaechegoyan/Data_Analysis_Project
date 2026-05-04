@@ -9,8 +9,8 @@
 # the father and the son(s) and their blood type. You must write the length of the 
 # list in the report, together with the number of fathers and the number of sons.
 
-from data.clean_data_class import People
-from src.read_people_info import read_people_info
+from Data_Analysis_Project.src.people_class import People
+from Data_Analysis_Project.src.functions import read_people_info
 
 child_to_parents = dict()
 

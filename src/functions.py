@@ -1,6 +1,6 @@
 
 # function read people's info
-from data.clean_data_class import People
+from src.people_class import People
 def read_people_info(filename): 
 
     current_person = None

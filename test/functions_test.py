@@ -1,9 +1,9 @@
-from data.clean_data_class import People
-from src.read_people_info import read_people_info
-from src.read_people_info import height_category
-from src.read_people_info import possible_child_blood
-from src.read_people_info import possible_child_rh
-from src.read_people_info import can_donate_blood
+from src.people_class import People
+from Data_Analysis_Project.src.functions import read_people_info
+from Data_Analysis_Project.src.functions import height_category
+from Data_Analysis_Project.src.functions import possible_child_blood
+from Data_Analysis_Project.src.functions import possible_child_rh
+from Data_Analysis_Project.src.functions import can_donate_blood
 
 ################################################
 ####### TESTING READ_PEOPLE_INFO FUNCTION ######

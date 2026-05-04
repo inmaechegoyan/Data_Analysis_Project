@@ -1,5 +1,5 @@
-from data.clean_data_class import People
-from src.read_people_info import read_people_info
+from Data_Analysis_Project.src.people_class import People
+from Data_Analysis_Project.src.functions import read_people_info
 
 def load_data(filename):
     people_by_cpr = {}

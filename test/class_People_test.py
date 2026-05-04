@@ -1,4 +1,4 @@
-from data.clean_data_class import People
+from src.people_class import People
 from pytest import approx
 
 # test gender = female by cpr number

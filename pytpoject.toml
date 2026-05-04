@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Data_Analysis"
+version = "0.1.0"
+description = "Analysis of demographic, family relations and blood compatibility data"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = 'MIT'}
+authors = [{name = 'Diego Medina Castelló', 'Inmauclada Echegoyan Venegas'}]
+dependencies = ["requests>=2.31"]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff", "mypy"]
+
+[tool.setuptools.packages.find]
+where = "src"
+
+[tool.ruff]
+[tool.setuptools.packages.find]
+
+[tool.mypy]
+strict = true

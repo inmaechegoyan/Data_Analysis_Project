@@ -7,8 +7,8 @@
 # BMI = weight (kg)/(height(m))^2
 
 
-from data.clean_data_class import People
-from src.read_people_info import read_people_info
+from Data_Analysis_Project.src.people_class import People
+from Data_Analysis_Project.src.functions import read_people_info
 
 
 
