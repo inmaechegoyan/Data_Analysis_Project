@@ -74,7 +74,7 @@ gender_by_cpr = dict()
 height_category_by_cpr = dict()
 
 # Q14
-fat_intervals = ["Underweight", "Normal weight", "Overweight", "Obese"]
+fat_intervals = ["Underweight", "Normal weight", "Preobese", "Obese"]
 people_fat = [0] * len(fat_intervals)
 children_fat = [0] * len(fat_intervals)
 
@@ -171,11 +171,11 @@ for person in read_people_info('data/people.db'):   # O(n)
         people_fat[0] += 1
         if(person.children):
             children_fat[0] += 1
-    elif( bmi < 24.9):
+    elif( bmi < 24.99):
         people_fat[1] += 1
         if(person.children):
             children_fat[1] += 1
-    elif(bmi < 29.9):
+    elif(bmi < 29.99):
         people_fat[2] += 1
         if(person.children):
             children_fat[2] += 1
