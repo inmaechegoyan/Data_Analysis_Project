@@ -33,22 +33,20 @@ total_female = 0
 total_male = 0 
 
 # Q2
+father_counts = [0] * 100
 max_age_father = 0
 min_age_father = 99
 age_count_father = 0 
 total_father = 0
 
-# Q3
-father_counts = [0] * len(age_intervals)
 
 # Q4
+mother_counts = [0] * 100
 total_mother = 0
 max_age_mother = 0
 min_age_mother = 99
 age_count_mother = 0
 
-# Q5
-mother_counts = [0] * len(age_intervals)
 
 # Q6
 woman_without_children = 0
@@ -119,11 +117,7 @@ for person in read_people_info('data/people.db'):   # O(n)
         total_father += 1
         max_age_father = max(max_age_father, age_fc)
         min_age_father = min(min_age_father, age_fc)
-
-        for i,(low,high) in enumerate(age_intervals):      # O(1)
-            if low <= age_fc < high:
-                father_counts[i] += 1
-                break
+        father_counts[age_fc] += 1
     
     # Q4 & Q5 & Q6
     if person.gender == "F":
@@ -133,10 +127,7 @@ for person in read_people_info('data/people.db'):   # O(n)
             max_age_mother = max(max_age_mother, age_fc)
             min_age_mother = min(min_age_mother, age_fc)
 
-            for i,(l,h) in enumerate(age_intervals):      # O(1)
-                if l <= age_fc < h:
-                    mother_counts[i] += 1
-                    break
+            mother_counts[age_fc] += 1
 
         if not person.children:
             woman_without_children += 1
@@ -506,11 +497,12 @@ print(f"Average age of first-time fathers::{avg_age_father:.2f}")
 
 print('\nQ3\n')
 
-print(f"{'Age range':<10} {'Male %':<10}")
+print(f"{'Age':<10} {'Count':<10} {'Male %':<10}")
 
-for i, (low, high) in enumerate(age_intervals):
-    male_percentage = (father_counts[i] / total_father) * 100 if total_father > 0 else 0
-    print(f"{low}-{high:<8} {male_percentage:<10.2f}") 
+for age in range(10, 40):
+    count = father_counts[age]
+    male_percentage = (count / total_father) * 100 if total_father > 0 else 0
+    print(f"{age:<10} {count:<10} {male_percentage:<10.2f}")
 
 
 # Q4
@@ -522,13 +514,13 @@ print(f"Average age of first-time mothers:{avg_age_mother:.2f}")
 
 
 # Q5 
-print('\nQ5\n')
+print('\nQ4\n')
+print(f"{'Age':<10} {'Count':<10} {'Female %':<10}")
 
-print(f"{'Age range':<10} {'Female %':<10}")
-
-for i, (low, high) in enumerate(age_intervals):
-    female_percentage = (mother_counts[i] / total_mother) * 100 if total_mother > 0 else 0
-    print(f"{low}-{high:<8} {female_percentage:<10.2f}") 
+for age in range(10, 40):
+    count = mother_counts[age]
+    female_percentage = (count / total_mother) * 100 if total_mother > 0 else 0
+    print(f"{age:<10} {count:<10} {female_percentage:<10.2f}")
 
 # Q6
 
