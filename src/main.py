@@ -246,19 +246,35 @@ for person in all_people:                          # O(n)
                         cousins_pair.append((person,cousin))
 
 # We will have duplicates, so we have to do a set to erase them
+# Remove duplicate cousin pairs
 cousins_pair = list(set(cousins_pair))
-length = len(cousins_pair)
 
-# calculate cousin average: 
+# Number of cousin pairs
+number_cousin_pairs = len(cousins_pair)
 
-counsin_per_person = {}
-for a,b in cousins_pair: 
-    if a not in counsin_per_person:
-        counsin_per_person[a] = set()
-    counsin_per_person[a].add(b)
+# People who have at least one cousin
+people_with_cousins = set()
 
-avg = (sum(len(v) for v in counsin_per_person.values()) / len(counsin_per_person)
-if counsin_per_person else 0)
+for person, cousin in cousins_pair:
+    people_with_cousins.add(person)
+    people_with_cousins.add(cousin)
+
+number_people_with_cousins = len(people_with_cousins)
+
+# Average number of cousins only among people who have cousins
+cousins_per_person = {}
+
+for person, cousin in cousins_pair:
+    if person not in cousins_per_person:
+        cousins_per_person[person] = set()
+    cousins_per_person[person].add(cousin)
+
+avg_cousins = (
+    sum(len(cousins) for cousins in cousins_per_person.values()) 
+    / len(cousins_per_person)
+    if cousins_per_person else 0
+)
+
 
 
 
@@ -538,11 +554,10 @@ print('\nQ8\n')
 print(f'The number of people that has at least one grandparent is {people_with_grandparents} which correspnd to the {percentage_granparents:.2f}% of the people in the database')
 
 # Q9
-
 print('\nQ9\n')
-print(f'The number of people that have cousins is {length} people')
-
-print(f'The average number of cousins per person is {avg:.2f}')
+print(f'The number of cousin pairs is {number_cousin_pairs}')
+print(f'The number of people that have cousins is {number_people_with_cousins}')
+print(f'The average number of cousins per person is {avg_cousins:.2f}')
 
 # Q10
 print('\nQ10\n')
