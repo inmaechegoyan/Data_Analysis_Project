@@ -1,9 +1,10 @@
 from src.people_class import People
-from Data_Analysis_Project.src.functions import read_people_info
-from Data_Analysis_Project.src.functions import height_category
-from Data_Analysis_Project.src.functions import possible_child_blood
-from Data_Analysis_Project.src.functions import possible_child_rh
-from Data_Analysis_Project.src.functions import can_donate_blood
+from src.functions import read_people_info
+from src.functions import height_category
+from src.functions import possible_child_blood
+from src.functions import possible_child_rh
+from src.functions import can_donate_blood
+from src.functions import bmi_category
 
 ################################################
 ####### TESTING READ_PEOPLE_INFO FUNCTION ######
@@ -54,6 +55,39 @@ def test_height_category_female_short():
     p = People("010180-1234")
     p.height = 159
     assert height_category(p) == "short"
+
+
+################################################
+####### TESTING BMI_CATEGORY FUNCTION ##########
+################################################
+
+# test slim BMI category
+def test_bmi_category_slim():
+    p = People("010180-1234")
+    p.height = 170
+    p.weight = 50
+    assert bmi_category(p) == "slim"
+
+# test normal BMI category
+def test_bmi_category_normal():
+    p = People("010180-1234")
+    p.height = 170
+    p.weight = 65
+    assert bmi_category(p) == "normal"
+
+# test fat BMI category
+def test_bmi_category_fat():
+    p = People("010180-1234")
+    p.height = 170
+    p.weight = 90
+    assert bmi_category(p) == "fat"
+
+# test unknown BMI category
+def test_bmi_category_unknown():
+    p = People("010180-1234")
+    p.height = None
+    p.weight = None
+    assert bmi_category(p) == "unknown"
 
 
 
