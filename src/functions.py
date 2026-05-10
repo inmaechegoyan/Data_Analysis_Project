@@ -68,7 +68,17 @@ def height_category(person):
             return 'normal'
         else: 
             return 'short'
-        
+
+def bmi_category(person):
+    bmi = person.bmi()  
+    if bmi is None:
+        return 'unknown'
+    if bmi < 18.5:
+        return 'slim'
+    elif bmi < 25:
+        return 'normal'
+    else:
+        return 'fat'
 
 def possible_child_blood(parent1, parent2):
     if parent1 == "A" and parent2 == "A":

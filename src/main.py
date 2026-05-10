@@ -6,6 +6,7 @@ from src.functions import height_category
 from src.functions import possible_child_blood
 from src.functions import possible_child_rh
 from src.functions import can_donate_blood
+from src.functions import bmi_category
 
 
 ##################################
@@ -75,6 +76,9 @@ height_category_by_cpr = dict()
 fat_intervals = ["Underweight", "Normal weight", "Preobese", "Obese"]
 people_fat = [0] * len(fat_intervals)
 children_fat = [0] * len(fat_intervals)
+bmi_category_by_cpr = {}
+bmi_couple_type = {}
+
 
 # Q15
 blood_type_by_cpr = dict()
@@ -174,6 +178,7 @@ for person in read_people_info('data/people.db'):   # O(n)
         people_fat[3] += 1
         if(person.children):
             children_fat[3] += 1  
+    bmi_category_by_cpr[cpr] = bmi_category(person)
 
     
 
@@ -290,19 +295,14 @@ girls_percentage = (girls / total_children)*100 if total_children else 0
 # Q11
 person_to_partner = {}
 
-for parents in child_to_parents.values():         # O(n)
-    if len(parents) < 2: 
-        continue    # There is no co-parenting 
-    
+for parents in child_to_parents.values():
+    if len(parents) < 2:
+        continue
+
     for i in range(len(parents)):
         for j in range(len(parents)):
-            if i == j: 
-                continue    # someone can not have kids with themselfs
-            
-        for i in range(len(parents)):
-            for j in range(len(parents)):
-                if i != j:
-                    person_to_partner.setdefault(parents[i], set()).add(parents[j])
+            if i != j:
+                person_to_partner.setdefault(parents[i], set()).add(parents[j])
 
 male_total = 0
 female_total = 0
@@ -317,14 +317,16 @@ for cpr, g in gender_by_cpr.items():
         male_total += 1
         if len(partners) > 1:
             male_pluspartner += 1
-    elif g == 'F': 
+
+    elif g == 'F':
         female_total += 1
-        if len(partners) > 1: 
+        if len(partners) > 1:
             female_pluspartner += 1
 
+men_more_partner = (male_pluspartner / male_total) * 100 if male_total > 0 else 0
+women_more_partner = (female_pluspartner / female_total) * 100 if female_total > 0 else 0
 
-men_more_partner = (male_pluspartner/male_total)*100 if male_total > 0 else 0 
-women_more_partner = (female_pluspartner/female_total)*100 if female_total > 0 else 0 
+
 
 
 # Q12
@@ -376,6 +378,26 @@ for child, parents in child_to_parents.items():       # O(n)
         # check if the kid is also tall 
         if height_category_by_cpr[child] == 'tall': 
             tall_and_tall += 1
+
+# Q14
+
+for parents in child_to_parents.values():
+    if len(parents) < 2:
+        continue
+
+    for i in range(len(parents)):
+        for j in range(i + 1, len(parents)):
+
+            b1 = bmi_category_by_cpr.get(parents[i], 'unknown')
+            b2 = bmi_category_by_cpr.get(parents[j], 'unknown')
+
+            if b1 == 'unknown' or b2 == 'unknown':
+                continue
+
+            couple = tuple(sorted([b1, b2]))
+            bmi_couple_type[couple] = bmi_couple_type.get(couple, 0) + 1
+
+total_bmi_couples = sum(bmi_couple_type.values())
 
 # Q15
 
@@ -530,7 +552,7 @@ print(f"Average age of first-time mothers:{avg_age_mother:.2f}")
 
 
 # Q5 
-print('\nQ4\n')
+print('\nQ5\n')
 print(f"{'Age':<10} {'Count':<10} {'Female %':<10}")
 
 for age in range(10, 40):
@@ -568,9 +590,10 @@ print(f"Firstborn likely to be male: {boys_percentage:.2f}%")
 # Q11
 print('\nQ11\n')
 
-print(f"{'':25}{'Men':5}{'Women':5}")
-print(f"{'Multiple partners (%)':25}{men_more_partner:5}{women_more_partner:5}")
-print(f"{'Total':25}{male_total:5}{female_total:5}")
+print(f"{'':30}{'Men':>10}{'Women':>10}")
+print(f"{'Multiple partners (%)':30}{men_more_partner:10.2f}{women_more_partner:10.2f}")
+print(f"{'Total people':30}{male_total:10}{female_total:10}")
+print(f"{'People with >1 partner':30}{male_pluspartner:10}{female_pluspartner:10}")
 
 
 # Q12
@@ -601,12 +624,32 @@ for i, label in enumerate(fat_intervals):
     fat_percentage = (people_fat[i] / total_people) * 100 if total_people > 0 else 0
     print(f"{label}  {fat_percentage:.2f}%  ({people_fat[i]}/{total_people})") 
 
-print("")
-print("Distribution of people having children according to their weight and bmi")
-for i, label in enumerate(fat_intervals):
-    children_fat_percentage = (children_fat[i] / people_fat[i]) * 100 if people_fat[i] > 0 else 0
-    print(f"{label}  {children_fat_percentage:.2f}%  ({children_fat[i]}/{people_fat[i]})") 
 
+
+print("BMI Couple Analysis")
+print(f"{'Couple Type':25} {'Percentage':>10}")
+
+expected_bmi_couples = [
+    ('fat', 'fat'),
+    ('fat', 'normal'),
+    ('fat', 'slim'),
+    ('normal', 'normal'),
+    ('normal', 'slim'),
+    ('slim', 'slim')
+]
+
+for couple in expected_bmi_couples:
+
+    sorted_couple = tuple(sorted(couple))
+
+    count = bmi_couple_type.get(sorted_couple, 0)
+
+    percentage = (
+        (count / total_bmi_couples) * 100
+        if total_bmi_couples > 0 else 0
+    )
+
+    print(f"{str(couple):25} {percentage:9.2f}%")
 
 # Q15
 
