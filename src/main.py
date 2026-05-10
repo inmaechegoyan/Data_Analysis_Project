@@ -96,14 +96,16 @@ for person in read_people_info('data/people.db'):   # O(n)
     all_people.add(cpr)                             # O(1)
     total_people += 1                               # O(1)
 
+    # Store basic attibutes for fast later access
     gender_by_cpr[cpr] = person.gender              # O(1)
     height_category_by_cpr[cpr] = height_category(person)    # O(1)
     parent_to_children[cpr] = person.children       # O(1)
     age_by_cpr[cpr] = person.age
     blood_type_by_cpr[cpr] = person.blood_type      # O(1)
 
-    # Q1
+    # Q1: Age and gender distribution 
     # age_interval has a fixed size (10)
+    # Assing person to an age interval 
     for i, (low,high) in enumerate(age_intervals):       # O(1)
         if low <= person.age < high: 
             if person.gender == 'F': 
@@ -114,7 +116,7 @@ for person in read_people_info('data/people.db'):   # O(n)
                 male_counts[i] += 1
             break
     
-    # Q2 & Q3
+    # Q2 & Q3: Age at first child (fathers) 
     age_fc = person.age_first_child()
     if person.gender == "M" and age_fc is not None:
         age_count_father += age_fc
@@ -123,7 +125,7 @@ for person in read_people_info('data/people.db'):   # O(n)
         min_age_father = min(min_age_father, age_fc)
         father_counts[age_fc] += 1
     
-    # Q4 & Q5 & Q6
+    # Q4 & Q5 & Q6: Mothers and people without children 
     if person.gender == "F":
         if age_fc is not None:
             age_count_mother += age_fc
@@ -132,10 +134,12 @@ for person in read_people_info('data/people.db'):   # O(n)
             min_age_mother = min(min_age_mother, age_fc)
 
             mother_counts[age_fc] += 1
-
+            
+        # Women without children 
         if not person.children:
             woman_without_children += 1
     else:
+        # Men without children 
         if not person.children:
             men_without_children += 1
 
@@ -147,9 +151,7 @@ for person in read_people_info('data/people.db'):   # O(n)
         child_to_parents[child].append(cpr)   # O(1)
 
     
-
-
-    # Q10
+    # Q10: First child gender distribution 
 
     first_child_cpr = person.first_child_cpr()  # O(1)
     if(person.children):
@@ -157,11 +159,13 @@ for person in read_people_info('data/people.db'):   # O(n)
             girls += 1
         else: boys +=1
 
-    # Q14
+    # Q14: BMI categories 
 
     bmi = person.bmi()                         # O(1)
     if bmi is None:
         continue
+        
+    # Classify BMI into categories
     if(bmi < 18.5):
         people_fat[0] += 1
         if(person.children):
@@ -187,15 +191,15 @@ for person in read_people_info('data/people.db'):   # O(n)
 ### POST-PROCESS ###
 ####################
 
-# Q2 & Q4
+# Q2 & Q4: Average parental age at first child
 avg_age_father = age_count_father / total_father if total_father else 0
 avg_age_mother = age_count_mother / total_mother if total_mother else 0
 
-# Q6
+# Q6: percentage of people without children
 percent_women = (woman_without_children / total_female)*100 if total_female else 0
 percent_men = (men_without_children / total_male)*100 if total_male else 0
 
-# Q7 
+# Q7: age difference between parents  
 
 age_difference = []
 
@@ -210,7 +214,7 @@ for parents in child_to_parents.values():      # O(n)
 
 avg_difference = sum(age_difference) / len(age_difference) if age_difference else 0
 
-# Q8 
+# Q8 : people with grandparents 
 
 for p in all_people:                             # O(n)
     parents = child_to_parents.get(p, [])
@@ -221,7 +225,7 @@ for p in all_people:                             # O(n)
 
 percentage_granparents = (people_with_grandparents /total_people) * 100
 
-# Q9 
+# Q9 : cousins pairs 
 
 cousins_pair = []
 
@@ -285,14 +289,14 @@ avg_cousins = (
 
 
 
-# Q10
+# Q10 : Child gender percentages
 total_children = boys + girls
 boys_percentage = (boys / total_children)*100 if total_children else 0
 girls_percentage = (girls / total_children)*100 if total_children else 0
 
 
 
-# Q11
+# Q11 : Partnet relationships among parents 
 person_to_partner = {}
 
 for parents in child_to_parents.values():
@@ -329,7 +333,7 @@ women_more_partner = (female_pluspartner / female_total) * 100 if female_total >
 
 
 
-# Q12
+# Q12 : Couple heigth 
 
 
 count_couple_type = dict()
